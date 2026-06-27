@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research Graph Explorer — Raphael Fontenot</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg2: #f6f6f4;
+      --bg3: #efefec;
+      --text: #1a1a18;
+      --text2: #5a5a56;
+      --text3: #9a9a94;
+      --border: rgba(0,0,0,0.12);
+      --border2: rgba(0,0,0,0.22);
+      --info-bg: #e6f1fb;
+      --info-text: #185fa5;
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1a;
+        --bg2: #252523;
+        --bg3: #2e2e2c;
+        --text: #e8e8e2;
+        --text2: #9a9a94;
+        --text3: #5a5a56;
+        --border: rgba(255,255,255,0.10);
+        --border2: rgba(255,255,255,0.18);
+        --info-bg: #0c447c;
+        --info-text: #b5d4f4;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #header {
+      padding: 16px 24px;
+      border-bottom: 0.5px solid var(--border);
+      flex-shrink: 0;
+    }
+    #header h1 { font-size: 17px; font-weight: 500; }
+    #header p { font-size: 12px; color: var(--text2); margin-top: 3px; }
+
+    #main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Graph */
+    #graph-panel {
+      flex: 1;
+      background: var(--bg2);
+      border-right: 0.5px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    #graph-canvas { width: 100%; height: 100%; }
+
+    /* Sidebar */
+    #sidebar {
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    #legend {
+      padding: 10px 16px;
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text2); }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+    #paper-detail {
+      padding: 12px 16px;
+      border-bottom: 0.5px solid var(--border);
+      min-height: 120px;
+      max-height: 180px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    #paper-detail h3 { font-size: 12px; font-weight: 500; line-height: 1.5; }
+    #paper-detail .meta { font-size: 11px; color: var(--text2); margin-top: 3px; }
+    #paper-detail .abstract { font-size: 11px; color: var(--text2); margin-top: 6px; line-height: 1.6; }
+    #paper-hint { font-size: 12px; color: var(--text3); font-style: italic; }
+
+    .pill {
+      display: inline-block; font-size: 10px;
+      background: var(--bg3); border: 0.5px solid var(--border2);
+      border-radius: 10px; padding: 2px 7px; margin: 3px 2px 0 0;
+      color: var(--text2);
+    }
+
+    /* Chat */
+    #chat-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    #chat-messages {
+      flex: 1; overflow-y: auto; padding: 12px 14px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .msg.user { display: flex; justify-content: flex-end; }
+    .msg.user .bubble {
+      background: var(--info-bg); color: var(--info-text);
+      border-radius: 12px 12px 4px 12px;
+    }
+    .msg.assistant .bubble {
+      background: var(--bg2); border: 0.5px solid var(--border);
+      border-radius: 12px 12px 12px 4px;
+    }
+    .bubble { padding: 8px 11px; font-size: 12px; line-height: 1.65; display: inline-block; max-width: 100%; }
+
+    .suggested-qs { padding: 0 14px 8px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+    .sq {
+      font-size: 11px; padding: 5px 10px;
+      border: 0.5px solid var(--border2); border-radius: 8px;
+      background: transparent; color: var(--text2);
+      cursor: pointer; text-align: left; font-family: inherit;
+    }
+    .sq:hover { background: var(--bg2); color: var(--text); }
+
+    #chat-input-area {
+      padding: 8px 12px; border-top: 0.5px solid var(--border);
+      display: flex; gap: 7px; flex-shrink: 0;
+    }
+    #chat-input {
+      flex: 1; font-size: 12px; padding: 7px 10px;
+      border: 0.5px solid var(--border2); border-radius: 8px;
+      background: var(--bg); color: var(--text);
+      outline: none; resize: none; font-family: inherit;
+    }
+    #chat-input:focus { border-color: var(--border2); outline: 1px solid var(--border2); }
+    #send-btn {
+      padding: 7px 13px; font-size: 12px;
+      border: 0.5px solid var(--border2); border-radius: 8px;
+      background: var(--bg); color: var(--text);
+      cursor: pointer; font-family: inherit; white-space: nowrap;
+    }
+    #send-btn:hover { background: var(--bg2); }
+    #send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    #key-area {
+      padding: 8px 12px; border-top: 0.5px solid var(--border);
+      background: var(--bg2); flex-shrink: 0;
+    }
+    #key-area label { font-size: 10px; color: var(--text3); display: block; margin-bottom: 3px; }
+    #key-input {
+      width: 100%; font-size: 11px; padding: 5px 8px;
+      border: 0.5px solid var(--border2); border-radius: 6px;
+      background: var(--bg); color: var(--text);
+      font-family: monospace; outline: none;
+    }
+
+    .typing { display: flex; gap: 4px; align-items: center; padding: 6px 10px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); animation: bounce 1.2s infinite; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+    /* Mobile */
+    @media (max-width: 700px) {
+      #main { flex-direction: column; }
+      #graph-panel { height: 260px; flex: none; border-right: none; border-bottom: 0.5px solid var(--border); }
+      #sidebar { width: 100%; flex: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <h1>Research Graph Explorer</h1>
+  <p>Raphael Fontenot · UMass Lowell · Graph Neural Networks for Public Health &amp; Clinical Audio</p>
+</div>
+
+<div id="main">
+  <div id="graph-panel">
+    <svg id="graph-canvas"></svg>
+  </div>
+
+  <div id="sidebar">
+    <div id="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>Environmental health</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#534AB7"></div>Clinical audio</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#D85A30"></div>Graph methods</div>
+    </div>
+
+    <div id="paper-detail">
+      <span id="paper-hint">Click a node to see paper details</span>
+    </div>
+
+    <div id="chat-area">
+      <div id="chat-messages">
+        <div class="msg assistant">
+          <div class="bubble">Ask me anything about Raphael's research. I'll retrieve relevant papers and answer from them.</div>
+        </div>
+      </div>
+
+      <div class="suggested-qs" id="suggestions">
+        <button class="sq" onclick="askQ(this)">What datasets has this research used?</button>
+        <button class="sq" onclick="askQ(this)">How does the GAT + XGBoost model work?</button>
+        <button class="sq" onclick="askQ(this)">How does the dementia work connect to the lead contamination work?</button>
+      </div>
+
+      <div id="chat-input-area">
+        <textarea id="chat-input" rows="2" placeholder="Ask about the research…"></textarea>
+        <button id="send-btn" onclick="sendMessage()">Ask</button>
+      </div>
+
+      <div id="key-area">
+        <label>Groq API key — free at console.groq.com</label>
+        <input id="key-input" type="password" placeholder="gsk_…" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Paper data ────────────────────────────────────────────────────────────────
+const PAPERS = [
+  {
+    id: "aaai2026",
+    title: "Spatial Graph Attention Networks with XGBoost for Lead Contamination Risk Prediction in Chicago Water Infrastructure",
+    venue: "AAAI 2026", domain: "env", color: "#1D9E75", light: "#E1F5EE",
+    year: 2026, status: "Published",
+    abstract: "We present a hybrid pipeline combining Spatial Graph Attention Networks (GAT) with gradient-boosted trees (XGBoost) to predict lead service line risk across Chicago's municipal water infrastructure. The approach constructs a spatial graph over water mains and service lines using geographic proximity and hydraulic connectivity as edge features. GAT layers aggregate neighborhood pressure and corrosion-risk signals, while XGBoost refines predictions using tabular features including pipe material, age, and census tract demographics. The model achieves strong AUROC and recall on held-out service lines, and includes an equity audit examining differential risk by neighborhood income and race.",
+    keywords: ["GAT", "XGBoost", "lead contamination", "Chicago", "water infrastructure", "spatial graph", "equity"],
+    methods: ["Graph Attention Network", "XGBoost", "spatial graph construction"],
+    datasets: ["Chicago water system", "service line inventory"]
+  },
+  {
+    id: "icassp2026",
+    title: "AST+GAT: Audio Spectrogram Transformer with Graph Attention for Dementia Detection from Speech",
+    venue: "ICASSP 2026", domain: "clinical", color: "#534AB7", light: "#EEEDFE",
+    year: 2026, status: "Published",
+    abstract: "This paper introduces a cross-modal architecture coupling Audio Spectrogram Transformers (AST) with Graph Attention Networks for dementia detection from clinical speech recordings. AST extracts rich spectral-temporal embeddings from spoken language tasks; a GAT then models relational structure across utterance segments, capturing long-range acoustic dependencies that single-instance classifiers miss. Evaluated on the ADReSS challenge corpus, the model outperforms unimodal baselines on MMSE score regression and binary dementia classification, with interpretable attention weights highlighting clinically meaningful acoustic markers such as pause frequency and lexical diversity.",
+    keywords: ["AST", "GAT", "dementia", "speech", "clinical audio", "ADReSS"],
+    methods: ["Audio Spectrogram Transformer", "Graph Attention Network", "cross-modal fusion"],
+    datasets: ["ADReSS challenge corpus", "DementiaBank"]
+  },
+  {
+    id: "chase",
+    title: "GNN-Based Lead Contamination Risk Prediction for Massachusetts Municipal Water Systems",
+    venue: "IEEE/ACM CHASE", domain: "env", color: "#1D9E75", light: "#E1F5EE",
+    year: 2025, status: "Published",
+    abstract: "We extend graph neural network approaches to lead contamination prediction across Massachusetts municipal water systems, addressing data heterogeneity challenges that arise when moving beyond single-city datasets. A GraphSAGE backbone aggregates features from spatially adjacent service connections, incorporating utility-reported material data, historical water quality samples, and census demographics. We perform ablation studies comparing multiple GNN variants and introduce cluster-stratified sampling to handle geographic imbalance. Transfer learning experiments from Flint and Chicago data are discussed, and the equity implications of false-negative predictions in lower-income communities are examined.",
+    keywords: ["GNN", "GraphSAGE", "lead contamination", "Massachusetts", "transfer learning", "equity"],
+    methods: ["GraphSAGE", "cluster-stratified sampling", "transfer learning"],
+    datasets: ["Massachusetts water systems", "Flint MI data", "Chicago data"]
+  },
+  {
+    id: "frontiers",
+    title: "Lead Service Line Risk Prediction Using Graph-Based Deep Learning: A Multi-City Environmental Engineering Perspective",
+    venue: "Frontiers in Env. Eng.", domain: "env", color: "#1D9E75", light: "#E1F5EE",
+    year: 2025, status: "Published",
+    abstract: "Lead exposure through drinking water infrastructure poses significant public health risks, particularly in cities with aging pipe networks. This paper provides a comprehensive survey and empirical comparison of graph-based deep learning approaches for predicting lead service line locations across Flint MI, Chicago, and Massachusetts. We analyze the role of graph topology — hydraulic proximity vs. geographic distance — in prediction performance, and demonstrate that physics-informed pressure field features improve recall on high-risk service lines. Results show strong generalization when training on one city and testing on another, suggesting shared structural patterns in urban water network topology.",
+    keywords: ["lead contamination", "graph deep learning", "Flint", "Chicago", "Massachusetts", "multi-city", "pressure field"],
+    methods: ["Graph neural networks", "physics-informed features", "multi-city analysis"],
+    datasets: ["Flint MI", "Chicago", "Massachusetts"]
+  },
+  {
+    id: "ssgat",
+    title: "Self-Supervised Graph Attention Networks for Semi-Supervised Health Risk Prediction",
+    venue: "Under Review", domain: "methods", color: "#D85A30", light: "#FAECE7",
+    year: 2025, status: "Under Review",
+    abstract: "We propose SSGAT, a self-supervised Graph Attention Network framework that addresses transductive leakage and label scarcity challenges common in public health prediction tasks. By pre-training on graph structure via masked node reconstruction and contrastive neighborhood objectives, SSGAT learns robust node representations before fine-tuning on limited labeled data. We demonstrate that naïve transductive GNN training leaks test-set structural information, inflating reported metrics, and propose a strict inductive evaluation protocol. Applied to both lead contamination and clinical audio graph datasets, SSGAT outperforms supervised baselines under low-label regimes.",
+    keywords: ["self-supervised", "GAT", "transductive leakage", "semi-supervised", "contrastive learning"],
+    methods: ["Self-supervised learning", "contrastive pre-training", "Graph Attention Network"],
+    datasets: ["lead contamination graphs", "clinical audio graphs"]
+  }
+];
+
+const EDGES = [
+  { source: "aaai2026",  target: "chase",     weight: 3 },
+  { source: "aaai2026",  target: "frontiers", weight: 3 },
+  { source: "chase",     target: "frontiers", weight: 3 },
+  { source: "aaai2026",  target: "ssgat",     weight: 2 },
+  { source: "icassp2026",target: "ssgat",     weight: 2 },
+  { source: "chase",     target: "ssgat",     weight: 1 },
+  { source: "icassp2026",target: "aaai2026",  weight: 1 },
+];
+
+// ─── Retrieval (TF-IDF cosine) ─────────────────────────────────────────────────
+function tokenize(text) {
+  return text.toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w => w.length > 2);
+}
+function buildTF(doc) {
+  const tokens = tokenize(doc);
+  const tf = {};
+  tokens.forEach(t => tf[t] = (tf[t]||0) + 1);
+  Object.keys(tf).forEach(k => tf[k] /= tokens.length);
+  return tf;
+}
+function cosineSim(a, b) {
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+  let dot=0, ma=0, mb=0;
+  keys.forEach(k => {
+    dot += (a[k]||0)*(b[k]||0);
+    ma  += (a[k]||0)**2;
+    mb  += (b[k]||0)**2;
+  });
+  return ma && mb ? dot / (Math.sqrt(ma)*Math.sqrt(mb)) : 0;
+}
+const indexed = PAPERS.map(p => ({
+  ...p,
+  tf: buildTF(p.title+' '+p.abstract+' '+p.keywords.join(' ')+' '+p.methods.join(' '))
+}));
+function retrieve(query, k=3) {
+  const qTF = buildTF(query);
+  return indexed
+    .map(p => ({...p, score: cosineSim(qTF, p.tf)}))
+    .sort((a,b) => b.score - a.score)
+    .slice(0, k)
+    .filter(p => p.score > 0);
+}
+
+// ─── Graph ─────────────────────────────────────────────────────────────────────
+function initGraph() {
+  const panel = document.getElementById('graph-panel');
+  const W = panel.clientWidth;
+  const H = panel.clientHeight;
+  const svg = d3.select('#graph-canvas').attr('width', W).attr('height', H);
+
+  const sim = d3.forceSimulation(PAPERS)
+    .force('link', d3.forceLink(EDGES).id(d=>d.id).distance(d => 100 + (3-d.weight)*25))
+    .force('charge', d3.forceManyBody().strength(-250))
+    .force('center', d3.forceCenter(W/2, H/2))
+    .force('collision', d3.forceCollide(50));
+
+  const g = svg.append('g');
+
+  const link = g.selectAll('.lk').data(EDGES).enter().append('line')
+    .attr('stroke', 'var(--border2)').attr('stroke-width', d => 0.5 + d.weight*0.3);
+
+  const node = g.selectAll('.nd').data(PAPERS).enter().append('g')
+    .attr('cursor','pointer')
+    .call(d3.drag()
+      .on('start',(e,d)=>{if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;})
+      .on('drag', (e,d)=>{d.fx=e.x;d.fy=e.y;})
+      .on('end',  (e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;})
+    )
+    .on('click', (_,d) => showPaper(d));
+
+  node.append('circle').attr('r',22)
+    .attr('fill', d=>d.light).attr('stroke', d=>d.color).attr('stroke-width',1.5);
+
+  node.append('text')
+    .attr('text-anchor','middle').attr('dy','0.35em')
+    .attr('font-size','10px').attr('font-weight','500').attr('fill', d=>d.color)
+    .text(d => d.venue.split(' ')[0].substring(0,6));
+
+  node.append('text')
+    .attr('text-anchor','middle').attr('dy','34px')
+    .attr('font-size','9.5px').attr('fill','var(--text2)')
+    .text(d => d.venue);
+
+  sim.on('tick', () => {
+    link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y)
+        .attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+    node.attr('transform', d=>`translate(${d.x},${d.y})`);
+  });
+
+  window._d3nodes = node;
+}
+
+function showPaper(p) {
+  document.getElementById('paper-detail').innerHTML = `
+    <h3>${p.title}</h3>
+    <div class="meta">${p.venue} · ${p.year} · <span style="color:${p.color}">${p.status}</span></div>
+    <div class="abstract">${p.abstract.substring(0,220)}…</div>
+    <div style="margin-top:6px">
+      ${p.keywords.slice(0,5).map(k=>`<span class="pill">${k}</span>`).join('')}
+    </div>`;
+}
+
+// ─── Chat ──────────────────────────────────────────────────────────────────────
+function askQ(btn) {
+  document.getElementById('chat-input').value = btn.textContent;
+  document.getElementById('suggestions').style.display = 'none';
+  sendMessage();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const query = input.value.trim();
+  if (!query) return;
+  const key = document.getElementById('key-input').value.trim();
+  if (!key) { addMsg('assistant','Please enter your Groq API key below to enable AI responses.'); return; }
+
+  addMsg('user', query);
+  input.value = '';
+  document.getElementById('send-btn').disabled = true;
+  document.getElementById('suggestions').style.display = 'none';
+
+  const hits = retrieve(query, 3);
+  const tid = addTyping();
+
+  const context = hits.map((p,i) =>
+    `[Paper ${i+1}: ${p.title} (${p.venue}, ${p.year})]\n${p.abstract}`
+  ).join('\n\n');
+
+  const system = `You are a research assistant for Raphael Fontenot, a PhD candidate at UMass Lowell studying GNNs for public health. Answer using ONLY the paper excerpts provided. Be concise (2–4 sentences). Cite by venue e.g. "In the AAAI 2026 paper…". If the answer isn't in the excerpts, say so.`;
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant',
+        max_tokens: 300,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: `Context:\n${context}\n\nQuestion: ${query}` }
+        ]
+      })
+    });
+    removeTyping(tid);
+    if (!res.ok) {
+      const err = await res.json();
+      addMsg('assistant', `API error: ${err.error?.message || res.statusText}`);
+    } else {
+      const data = await res.json();
+      const answer = data.choices[0].message.content;
+      const pills = hits.map(p=>`<span class="pill">${p.venue}</span>`).join('');
+      addMsg('assistant', `${answer}<div style="margin-top:5px">Sources: ${pills}</div>`);
+      pulseNodes(hits.map(p=>p.id));
+    }
+  } catch(e) {
+    removeTyping(tid);
+    addMsg('assistant','Network error — check your API key and try again.');
+  }
+  document.getElementById('send-btn').disabled = false;
+}
+
+let tc = 0;
+function addMsg(role, html) {
+  const el = document.createElement('div');
+  el.className = `msg ${role}`;
+  el.innerHTML = `<div class="bubble">${html}</div>`;
+  const c = document.getElementById('chat-messages');
+  c.appendChild(el);
+  c.scrollTop = c.scrollHeight;
+}
+function addTyping() {
+  const id = 't'+(++tc);
+  const el = document.createElement('div');
+  el.className='msg assistant'; el.id=id;
+  el.innerHTML=`<div class="bubble"><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+  const c = document.getElementById('chat-messages');
+  c.appendChild(el); c.scrollTop=c.scrollHeight;
+  return id;
+}
+function removeTyping(id) { document.getElementById(id)?.remove(); }
+
+function pulseNodes(ids) {
+  if (!window._d3nodes) return;
+  window._d3nodes.select('circle')
+    .transition().duration(250)
+    .attr('r', d => ids.includes(d.id) ? 28 : 22)
+    .attr('stroke-width', d => ids.includes(d.id) ? 3 : 1.5);
+  setTimeout(() => {
+    window._d3nodes.select('circle')
+      .transition().duration(500)
+      .attr('r', 22).attr('stroke-width', 1.5);
+  }, 1800);
+}
+
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+
+window.addEventListener('load', initGraph);
+window.addEventListener('resize', () => {
+  document.getElementById('graph-canvas').innerHTML = '';
+  initGraph();
+});
+</script>
+</body>
+</html>
