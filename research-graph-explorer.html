@@ -3,215 +3,80 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Research Graph · Raphael Fontenot</title>
+<title>Research Graph · Raphael Anaadumba</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --navy:#080d1a;
-  --navy2:#0e1629;
-  --navy3:#162040;
-  --teal:#00d4aa;
-  --teal-dim:#00d4aa44;
-  --violet:#8b5cf6;
-  --violet-dim:#8b5cf644;
-  --amber:#f59e0b;
-  --amber-dim:#f59e0b44;
-  --white:#f0f4ff;
-  --white2:#a8b4cc;
-  --white3:#4a5568;
+  --navy:#080d1a;--navy2:#0e1629;--navy3:#162040;
+  --teal:#00d4aa;--teal-dim:#00d4aa44;
+  --violet:#8b5cf6;--violet-dim:#8b5cf644;
+  --amber:#f59e0b;--amber-dim:#f59e0b44;
+  --white:#f0f4ff;--white2:#a8b4cc;--white3:#4a5568;
   --glass:rgba(8,13,26,0.75);
   --glass-border:rgba(255,255,255,0.08);
   --glass-border-bright:rgba(255,255,255,0.15);
-  --radius:12px;
-  --radius-lg:18px;
+  --radius:12px;--radius-lg:18px;
 }
-
-html,body{
-  width:100%;height:100%;overflow:hidden;
-  background:var(--navy);
-  color:var(--white);
-  font-family:'Inter',sans-serif;
-}
-
-/* ── Canvas ── */
+html,body{width:100%;height:100%;overflow:hidden;background:var(--navy);color:var(--white);font-family:'Inter',sans-serif;}
 #canvas{position:fixed;inset:0;z-index:0}
 #canvas svg{width:100%;height:100%}
-
-/* ── Gradient vignette ── */
-#vignette{
-  position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse at center, transparent 30%, rgba(8,13,26,0.6) 100%);
-}
-
-/* ── Header ── */
-#header{
-  position:fixed;top:0;left:0;right:0;z-index:10;
-  padding:0 28px;height:56px;
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--glass);
-  border-bottom:0.5px solid var(--glass-border);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-}
+#vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at center, transparent 30%, rgba(8,13,26,0.6) 100%);}
+#header{position:fixed;top:0;left:0;right:0;z-index:10;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;background:var(--glass);border-bottom:0.5px solid var(--glass-border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
 #header-left{display:flex;align-items:center;gap:14px}
-#logo{
-  width:32px;height:32px;border-radius:8px;
-  background:linear-gradient(135deg,var(--teal),var(--violet));
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff;
-  flex-shrink:0;
-}
+#logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--teal),var(--violet));display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:#fff;flex-shrink:0;}
 #site-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:var(--white);letter-spacing:-0.2px}
 #site-sub{font-size:11px;color:var(--white2);margin-top:1px}
 #header-right{display:flex;align-items:center;gap:20px}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--white2)}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-
-#status-pill{
-  display:flex;align-items:center;gap:6px;
-  padding:5px 10px;border-radius:20px;
-  background:rgba(255,255,255,0.06);border:0.5px solid var(--glass-border);
-  font-size:11px;color:var(--white2);
-}
+#status-pill{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;background:rgba(255,255,255,0.06);border:0.5px solid var(--glass-border);font-size:11px;color:var(--white2);}
 #status-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0;transition:background .4s}
 #status-dot.ready{background:var(--teal)}
 #status-dot.error{background:#ef4444}
-
-/* ── Paper detail drawer ── */
-#paper-drawer{
-  position:fixed;bottom:24px;left:24px;z-index:10;
-  width:320px;
-  background:var(--glass);
-  border:0.5px solid var(--glass-border);
-  border-radius:var(--radius-lg);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  padding:18px 20px;
-  transition:opacity .3s,transform .3s;
-  opacity:0;transform:translateY(8px);pointer-events:none;
-}
+#paper-drawer{position:fixed;bottom:24px;left:24px;z-index:10;width:320px;background:var(--glass);border:0.5px solid var(--glass-border);border-radius:var(--radius-lg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);padding:18px 20px;transition:opacity .3s,transform .3s;opacity:0;transform:translateY(8px);pointer-events:none;}
 #paper-drawer.visible{opacity:1;transform:translateY(0);pointer-events:all}
 #drawer-venue{font-size:10px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px}
 #drawer-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;line-height:1.5;color:var(--white)}
 #drawer-abstract{font-size:11px;color:var(--white2);margin-top:8px;line-height:1.7}
 #drawer-keywords{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
-.kw{
-  font-size:10px;padding:3px 8px;border-radius:20px;
-  border:0.5px solid var(--glass-border-bright);
-  color:var(--white2);
-}
-#drawer-close{
-  position:absolute;top:12px;right:14px;
-  background:none;border:none;color:var(--white3);cursor:pointer;font-size:16px;line-height:1;
-}
+.kw{font-size:10px;padding:3px 8px;border-radius:20px;border:0.5px solid var(--glass-border-bright);color:var(--white2);}
+#drawer-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--white3);cursor:pointer;font-size:16px;line-height:1;}
 #drawer-close:hover{color:var(--white)}
-
-/* ── Chat panel ── */
-#chat-panel{
-  position:fixed;top:68px;right:24px;bottom:24px;z-index:10;
-  width:340px;display:flex;flex-direction:column;
-  background:var(--glass);
-  border:0.5px solid var(--glass-border);
-  border-radius:var(--radius-lg);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  overflow:hidden;
-}
-
-#chat-panel-header{
-  padding:14px 18px 12px;
-  border-bottom:0.5px solid var(--glass-border);
-  flex-shrink:0;
-}
+#chat-panel{position:fixed;top:68px;right:24px;bottom:24px;z-index:10;width:340px;display:flex;flex-direction:column;background:var(--glass);border:0.5px solid var(--glass-border);border-radius:var(--radius-lg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);overflow:hidden;}
+#chat-panel-header{padding:14px 18px 12px;border-bottom:0.5px solid var(--glass-border);flex-shrink:0;}
 #chat-panel-header h2{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--white)}
 #chat-panel-header p{font-size:11px;color:var(--white2);margin-top:2px}
-
-#chat-messages{
-  flex:1;overflow-y:auto;padding:14px 16px;
-  display:flex;flex-direction:column;gap:10px;
-  scrollbar-width:thin;scrollbar-color:var(--navy3) transparent;
-}
+#chat-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:var(--navy3) transparent;}
 #chat-messages::-webkit-scrollbar{width:3px}
 #chat-messages::-webkit-scrollbar-thumb{background:var(--navy3);border-radius:2px}
-
 .msg.user{display:flex;justify-content:flex-end}
-.msg.user .bubble{
-  background:linear-gradient(135deg,var(--teal-dim),var(--violet-dim));
-  border:0.5px solid rgba(0,212,170,0.3);
-  border-radius:14px 14px 4px 14px;color:var(--white);
-}
-.msg.assistant .bubble{
-  background:rgba(255,255,255,0.05);
-  border:0.5px solid var(--glass-border);
-  border-radius:14px 14px 14px 4px;color:var(--white);
-}
+.msg.user .bubble{background:linear-gradient(135deg,var(--teal-dim),var(--violet-dim));border:0.5px solid rgba(0,212,170,0.3);border-radius:14px 14px 4px 14px;color:var(--white);}
+.msg.assistant .bubble{background:rgba(255,255,255,0.05);border:0.5px solid var(--glass-border);border-radius:14px 14px 14px 4px;color:var(--white);}
 .bubble{padding:9px 13px;font-size:12px;line-height:1.7;display:inline-block;max-width:100%}
-
-.source-pill{
-  display:inline-block;font-size:10px;
-  padding:2px 8px;border-radius:10px;margin:4px 3px 0 0;
-  border:0.5px solid var(--glass-border-bright);color:var(--white2);
-}
-
+.source-pill{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin:4px 3px 0 0;border:0.5px solid var(--glass-border-bright);color:var(--white2);}
 #suggestions{padding:0 14px 10px;display:flex;flex-direction:column;gap:5px;flex-shrink:0}
-.sq{
-  font-size:11px;padding:7px 11px;text-align:left;
-  border:0.5px solid var(--glass-border);border-radius:10px;
-  background:rgba(255,255,255,0.04);color:var(--white2);
-  cursor:pointer;font-family:'Inter',sans-serif;
-  transition:background .15s,border-color .15s,color .15s;
-}
+.sq{font-size:11px;padding:7px 11px;text-align:left;border:0.5px solid var(--glass-border);border-radius:10px;background:rgba(255,255,255,0.04);color:var(--white2);cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s,border-color .15s,color .15s;}
 .sq:hover{background:rgba(255,255,255,0.09);border-color:var(--glass-border-bright);color:var(--white)}
-
 #chat-bottom{flex-shrink:0}
-#chat-input-row{
-  padding:10px 12px;
-  border-top:0.5px solid var(--glass-border);
-  display:flex;gap:8px;align-items:flex-end;
-}
-#chat-input{
-  flex:1;font-size:12px;padding:8px 11px;
-  border:0.5px solid var(--glass-border-bright);border-radius:10px;
-  background:rgba(255,255,255,0.06);color:var(--white);
-  outline:none;resize:none;font-family:'Inter',sans-serif;
-  transition:border-color .15s;
-}
+#chat-input-row{padding:10px 12px;border-top:0.5px solid var(--glass-border);display:flex;gap:8px;align-items:flex-end;}
+#chat-input{flex:1;font-size:12px;padding:8px 11px;border:0.5px solid var(--glass-border-bright);border-radius:10px;background:rgba(255,255,255,0.06);color:var(--white);outline:none;resize:none;font-family:'Inter',sans-serif;transition:border-color .15s;}
 #chat-input::placeholder{color:var(--white3)}
 #chat-input:focus{border-color:rgba(0,212,170,0.5)}
-#send-btn{
-  padding:8px 14px;font-size:12px;font-family:'Inter',sans-serif;font-weight:500;
-  border:0.5px solid rgba(0,212,170,0.4);border-radius:10px;
-  background:rgba(0,212,170,0.12);color:var(--teal);
-  cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s;
-}
+#send-btn{padding:8px 14px;font-size:12px;font-family:'Inter',sans-serif;font-weight:500;border:0.5px solid rgba(0,212,170,0.4);border-radius:10px;background:rgba(0,212,170,0.12);color:var(--teal);cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s;}
 #send-btn:hover{background:rgba(0,212,170,0.22);border-color:rgba(0,212,170,0.6)}
 #send-btn:disabled{opacity:.35;cursor:not-allowed}
-
-#key-row{
-  padding:8px 12px;border-top:0.5px solid var(--glass-border);
-  background:rgba(0,0,0,0.2);
-}
+#key-row{padding:8px 12px;border-top:0.5px solid var(--glass-border);background:rgba(0,0,0,0.2);}
 #key-row span{font-size:10px;color:var(--white3)}
-
-/* ── Typing indicator ── */
 .typing{display:flex;gap:4px;align-items:center;padding:4px 2px}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--white3);animation:bounce 1.2s infinite}
 .dot:nth-child(2){animation-delay:.2s}
 .dot:nth-child(3){animation-delay:.4s}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-
-/* ── Hint ── */
-#graph-hint{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:5;
-  font-size:11px;color:var(--white3);
-  background:var(--glass);border:0.5px solid var(--glass-border);
-  padding:6px 14px;border-radius:20px;
-  backdrop-filter:blur(10px);pointer-events:none;
-  transition:opacity .5s;
-}
-
+#graph-hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:5;font-size:11px;color:var(--white3);background:var(--glass);border:0.5px solid var(--glass-border);padding:6px 14px;border-radius:20px;backdrop-filter:blur(10px);pointer-events:none;transition:opacity .5s;}
 @media(max-width:780px){
   #chat-panel{left:12px;right:12px;top:auto;bottom:0;height:55vh;width:auto;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
   #paper-drawer{display:none}
@@ -226,7 +91,7 @@ html,body{
 
 <header id="header">
   <div id="header-left">
-    <div id="logo">RF</div>
+    <div id="logo">RA</div>
     <div>
       <div id="site-title">Research Graph</div>
       <div id="site-sub">Research Highlights · UMass Lowell PhD</div>
@@ -266,7 +131,7 @@ html,body{
   <div id="suggestions">
     <button class="sq" onclick="askQ(this)">What datasets has this research used?</button>
     <button class="sq" onclick="askQ(this)">How does the GAT + XGBoost model work?</button>
-    <button class="sq" onclick="askQ(this)">What is transductive leakage and how was it fixed?</button>
+    <button class="sq" onclick="askQ(this)">How does SSGAT transfer knowledge across cities?</button>
     <button class="sq" onclick="askQ(this)">How does dementia detection relate to the lead work?</button>
   </div>
   <div id="chat-bottom">
@@ -282,67 +147,71 @@ html,body{
 
 <script type="module">
 const PAPERS=[
-  {id:"aaai2026",title:"Spatial GAT + XGBoost for Lead Contamination Risk Prediction in Chicago",
+  {id:"aaai2026",
+   title:"Spatial GAT + XGBoost for Lead Contamination Risk Prediction in Chicago",
    venue:"AAAI 2026",domain:"env",color:"#00d4aa",glow:"#00d4aa",year:2026,status:"Published",
    keywords:["GAT","XGBoost","lead contamination","Chicago","spatial graph","equity","AUROC"],
    chunks:[
-    "Title: Spatial Graph Attention Networks with XGBoost for Lead Contamination Risk Prediction in Chicago Water Infrastructure. Venue: AAAI 2026, Published 2026. This paper presents a hybrid pipeline combining Spatial Graph Attention Networks (GAT) with gradient-boosted trees (XGBoost) to predict lead service line risk across Chicago municipal water infrastructure.",
-    "Methods: Spatial graph constructed over water mains and service lines using geographic proximity and hydraulic connectivity as edge features. GAT layers aggregate neighborhood pressure and corrosion-risk signals. XGBoost refines predictions using tabular features: pipe material, age, census tract demographics.",
-    "Results: Strong AUROC and high recall on held-out service lines. Multi-seed evaluation shows honest AUROC range of 0.826 to 0.871. Ablation studies compare GNN variants V1 through V6. Equity audit examines differential risk by neighborhood income and race.",
-    "Dataset: Chicago water system service line inventory. Block-group level features across approximately 739 block groups. GraphSAGE backbone with BallTree cross-zone edge construction replacing expensive N×N haversine computation."
+    "Title: Spatial Graph Attention Network Modeling for Neighborhood-Scale Lead Contamination Risk Prediction Using Publicly Available Data. Published at AAAI 2026 — The Fortieth AAAI Conference on Artificial Intelligence, one of the most prestigious AI conferences in the world. Authors: Raphael Anaadumba, Nazim A. Belabbaci, Connor Sullivan, Anton Kovalev, Yidong Zhu, Pradeep Kurup, Mohammad Arif Ul Alam. University of Massachusetts Lowell, supported by NSF Award No. 2230180. This paper tackles a critical public health problem: millions of American households are exposed to lead through aging water infrastructure, and current municipal inspection strategies are reactive, inequitable, and inefficient. We built a new AI framework that predicts which neighborhoods are at highest risk of lead contamination — enabling cities to act before harm occurs rather than after.",
+    "Methods: We developed a hybrid architecture combining Graph Attention Networks (GAT) with XGBoost gradient boosting — two complementary AI techniques that together outperform either alone. The GAT component models spatial relationships between Chicago census block groups, learning how contamination risk propagates through water distribution networks and geographic proximity. XGBoost then incorporates rich sociodemographic features — housing age, race, ethnicity, income, plumbing type — to capture why risk varies even within spatially similar neighborhoods. The spatial graph connects block groups within 1 km using Haversine distance, producing a realistic model of urban water infrastructure. Features were carefully selected using Recursive Feature Elimination to prevent data leakage, ensuring results reflect genuine predictive signal rather than artifacts of the training process.",
+    "Dataset: We used 38,385 real lead water tests collected by the Chicago Department of Water Management from 2016 to 2023 — a large, authoritative public health dataset. Sociodemographic features came from the 2021 American Community Survey and 2020 Census, covering 125 variables across demographics, race/ethnicity, housing, infrastructure, and economics across 800 Chicago census block groups. The prediction target aligns directly with EPA regulatory standards: identifying block groups where lead levels meet or exceed 10 parts per billion, consistent with the EPA Lead and Copper Rule Improvements finalized in 2024. This means our model outputs are immediately actionable by municipal water authorities under current and upcoming federal regulations.",
+    "Results: Our GAT-XGBoost framework achieves 84.8% balanced accuracy and 91.6% recall on unsafe neighborhoods — meaning it correctly identifies the vast majority of high-risk areas. Critically, it reduces false positive inspections by 44% compared to spatial-only models and 21% compared to current municipal practice. This matters operationally: for a typical quarterly inspection cycle of 100 block groups, our model eliminates approximately 12 unnecessary inspections compared to the next best approach, saving limited public health resources. Model predictions strongly correlate with established risk factors — neighborhoods flagged as unsafe have average per capita income of $42,684 versus $74,588 in safe areas (Cohen's d=0.87), confirming the model captures real-world inequity patterns. This work directly supports equitable, data-driven lead risk management for cities nationwide."
    ]},
-  {id:"icassp2026",title:"AST+GAT for Dementia Detection from Clinical Speech",
+  {id:"icassp2026",
+   title:"AST+GAT for Dementia Detection from Clinical Speech",
    venue:"ICASSP 2026",domain:"clinical",color:"#8b5cf6",glow:"#8b5cf6",year:2026,status:"Published",
-   keywords:["AST","GAT","dementia","speech","clinical audio","ADReSS","MMSE","DementiaBank"],
+   keywords:["AST","GAT","dementia","speech","clinical audio","MMSE","DementiaBank","TAUKADIAL"],
    chunks:[
-    "Title: AST+GAT: Audio Spectrogram Transformer with Graph Attention for Dementia Detection from Speech. Venue: ICASSP 2026, Published 2026. Cross-modal architecture coupling Audio Spectrogram Transformers with Graph Attention Networks for dementia detection from clinical speech recordings.",
-    "Methods: AST extracts spectral-temporal embeddings from spoken language tasks. GAT models relational structure across utterance segments, capturing long-range acoustic dependencies that single-instance classifiers miss. Cross-modal fusion of acoustic and graph-based features.",
-    "Results: Evaluated on ADReSS challenge corpus and TAUKADIAL dataset. Outperforms unimodal baselines on MMSE score regression and binary dementia classification. Attention weights highlight pause frequency and lexical diversity as clinically meaningful markers.",
-    "Clinical relevance: Detects early cognitive decline indicators from spontaneous speech. MMSE regression allows continuous severity scoring. Ablation studies across Pitt Corpus and TAUKADIAL datasets."
+    "Title: Modeling Inter-Segment Relationships in Speech for Dementia Detection with Audio Spectrogram Transformers and Graph Attention Networks. Published at ICASSP 2026 — the IEEE International Conference on Acoustics, Speech and Signal Processing, one of the most prestigious signal processing and AI conferences in the world. Authors: Raphael Anaadumba, Nazim A. Belabbaci, Anton Kovalev, Mohammad Arif Ul Alam. University of Massachusetts Lowell. This paper addresses a critical healthcare challenge: dementia affects over 55 million people worldwide, yet traditional diagnosis relies on costly neuroimaging and in-person cognitive assessments. We built an AI system that detects dementia and mild cognitive impairment directly from spontaneous speech recordings — no transcripts, no clinical visits required — making large-scale screening feasible for the first time.",
+    "Methods: We developed AST+GAT, a novel architecture that combines Audio Spectrogram Transformers (AST) with Graph Attention Networks (GAT) to model how speech segments relate to each other — not just what each segment sounds like individually. Each audio recording is segmented into overlapping 10-second windows with 5-second hop. The AST extracts 768-dimensional spectrotemporal embeddings per window, augmented with 5 prosodic features proven to mark cognitive decline: duration, RMS energy, average pause duration, pause frequency, and speech-to-silence ratio. These windows become nodes in a graph connected by two types of edges: temporal adjacency (preserving narrative flow) and k-nearest neighbor similarity (connecting acoustically similar but temporally distant segments). A two-layer GAT with 4 attention heads then learns which inter-segment relationships are most diagnostic of cognitive impairment.",
+    "Datasets and Evaluation: Validated on two established clinical benchmarks. The DementiaBank Pitt Corpus — the most widely cited benchmark in dementia research — contains 552 recordings (309 Alzheimer's disease, 243 healthy controls) from the standardized Cookie Theft picture description task. TAUKADIAL-24 targets earlier-stage Mild Cognitive Impairment (MCI) with 186 participants (123 MCI, 63 controls). Using speaker-disjoint stratified 10-fold cross-validation — the gold standard for preventing data leakage in clinical AI — AST+GAT achieves 80.5% accuracy on Pitt Corpus and 81.8% accuracy on TAUKADIAL, outperforming all published audio-only baselines including Whisper fine-tuned (80.6%) and GCNN (73.6%).",
+    "Results and Clinical Impact: AST+GAT delivers consistent, significant gains over AST-only baselines: +9.7% absolute accuracy on Pitt Corpus and +30.5% on TAUKADIAL. For MMSE cognitive severity regression, the model reduces prediction error by 7% on Pitt and 38% on TAUKADIAL compared to AST-only. The graph attention mechanism captures exactly what clinical literature predicts — cognitively impaired speakers show fragmented inter-segment attention patterns while controls exhibit coherent temporal connections, validating the clinical interpretability of the model. Critically, the approach adds only 0.47M parameters (0.5% overhead) to the AST backbone, making it computationally practical for telehealth, remote monitoring, and low-resource clinical settings. This work establishes graph-based speech modeling as a viable, scalable tool for early dementia screening."
    ]},
-  {id:"chase",title:"GNN-Based Lead Risk Prediction for Massachusetts Water Systems",
-   venue:"IEEE/ACM CHASE",domain:"env",color:"#00d4aa",glow:"#00d4aa",year:2025,status:"Published",
-   keywords:["GNN","GraphSAGE","Massachusetts","lead contamination","transfer learning","equity","Andover","Lowell"],
+  {id:"chase",
+   title:"Enhancing Respiratory Disease Diagnosis with Graph Convolutional Networks Through Non-Speech Audio Synthesis",
+   venue:"ACM/IEEE CHASE 2025",domain:"clinical",color:"#8b5cf6",glow:"#8b5cf6",year:2025,status:"Published",
+   keywords:["GCN","CNN","respiratory disease","audio classification","COPD","pneumonia","attention mechanism","graph neural networks"],
    chunks:[
-    "Title: GNN-Based Lead Contamination Risk Prediction for Massachusetts Municipal Water Systems. Venue: IEEE/ACM CHASE 2025. Extends GNN approaches to lead contamination prediction across Massachusetts cities including Andover, Lawrence, and Lowell.",
-    "Methods: GraphSAGE backbone aggregates features from spatially adjacent service connections. Features include utility-reported material data, historical water quality samples, census demographics. Cluster-stratified sampling handles geographic imbalance. Pipeline called TabGraphSyn targets AUROC ≥ 0.79 and recall ≥ 0.8889 for unsafe lead at 1 ppb threshold.",
-    "Transfer learning: Experiments transferring from Flint MI and Chicago data to Massachusetts. City-by-label stratified splitting. CVAE-based synthetic data generation explored.",
-    "Key finding: 66 confirmed-replaced Andover addresses with high pre-replacement readings are absent from the training table — a major source of geographic bias. Within-city AUROC diagnostics show key cities fall below 0.62, indicating feature-level indistinguishability as the core problem."
+    "Title: Enhancing Respiratory Disease Diagnosis with Graph Convolutional Networks Through Non-Speech Audio Synthesis. Published at ACM/IEEE CHASE 2025 — the International Conference on Connected Health: Applications, Systems and Engineering Technologies, June 24-26, 2025, New York. Pages 149-153. DOI: 10.1145/3721201.3721402. Authors: Raphael Anaadumba, Nazim A. Belabbaci, Mohammad Arif Ul Alam. University of Massachusetts Lowell. This paper addresses a global health crisis — respiratory diseases affect over 1 billion people and caused 5.8 million deaths in 2019. We built an AI system that diagnoses respiratory diseases directly from lung sounds recorded via smartphone or stethoscope, making automated diagnosis accessible without specialized clinical equipment.",
+    "Methods: We developed a hybrid CNN-GCN architecture that combines Convolutional Neural Networks for spectral feature extraction with Graph Convolutional Networks for relational pattern modeling across respiratory sound segments. The CNN component — inspired by LeNet-5 — extracts features from Short-Time Fourier Transform spectrograms of respiratory sounds. These features are reduced via PCA and passed to a GCN that constructs a graph where nodes represent sound segments and edges capture cosine similarity relationships between segments. An attention mechanism is added to emphasize diagnostically relevant temporal regions of the spectrogram, computed as weighted feature maps that focus the model on the most informative parts of each recording.",
+    "Dataset: Evaluated on the ICBHI 2017 Respiratory Sound Database — a publicly available, widely-used benchmark comprising 1,021 annotated recordings from 126 patients, collected across multiple hospitals and clinical environments using digital stethoscopes and electret microphones. The dataset covers six respiratory conditions: COPD (160 recordings), asthma (300 recordings), pneumonia (200 recordings), bronchiectasis (160 recordings), interstitial lung disease (203 recordings), and 114 normal recordings. The model was evaluated across three classification tasks of increasing complexity: 2-way (healthy vs. unhealthy), 3-way (normal, COPD, pneumonia), and 6-way (six specific conditions).",
+    "Results: The CNN-GCN model achieves 95% accuracy on 2-way classification, 93% on 3-way, and 90% on 6-way — with the attention mechanism boosting 6-way accuracy to 93% with 97% precision and 90% recall. The model achieves perfect recall of 100% for both Bronchiolitis and Pneumonia with attention — the two most clinically critical conditions to detect. Compared to state-of-the-art baselines, CNN-GCN with attention outperforms Paraschiv et al. (90.21%) and Choi and Lee (92.56%) on 6-way classification. The model is computationally efficient — depthwise separable convolutions and GCN layers keep computational demands low, making it viable for deployment in resource-limited clinical settings and telehealth applications."
    ]},
-  {id:"frontiers",title:"Lead Service Line Risk: A Multi-City Deep Learning Perspective",
-   venue:"Frontiers in Env. Eng.",domain:"env",color:"#00d4aa",glow:"#00d4aa",year:2025,status:"Published",
-   keywords:["lead contamination","Flint","Chicago","Massachusetts","multi-city","physics-informed","pressure field"],
+  {id:"frontiers",
+   title:"Graph Neural Network-Based Water Contamination Detection from Community Housing Information",
+   venue:"Frontiers in Environmental Engineering",domain:"env",color:"#00d4aa",glow:"#00d4aa",year:2025,status:"Published",
+   keywords:["GAT","lead contamination","Flint Michigan","housing data","graph neural network","water quality","public health","Zillow"],
    chunks:[
-    "Title: Lead Service Line Risk Prediction Using Graph-Based Deep Learning: A Multi-City Environmental Engineering Perspective. Venue: Frontiers in Environmental Engineering, 2025. Comprehensive comparison of graph-based deep learning for lead service line prediction across Flint MI, Chicago, and Massachusetts.",
-    "Methods: Graph topology comparison of hydraulic proximity versus geographic distance. Physics-informed Laplacian pressure field features improve recall on high-risk lines. House-level GAT for Flint with parcel and Zillow features across 16,000 homes.",
-    "Cross-city generalization: Strong generalization when training on one city and testing on another, revealing shared structural patterns in urban water network topology. Mann-Whitney U feature selection and stratified 70/15/15 splits used for transfer learning pipeline.",
-    "Public health impact: Discusses policy implications for prioritizing pipe replacement. Equity audit pipeline examines differential risk across demographic groups. Lead exposure through aging pipe networks poses significant risks particularly in lower-income areas."
+    "Title: Graph Neural Network-Based Water Contamination Detection from Community Housing Information. Published in Frontiers in Environmental Engineering, Volume 4, March 30 2025. DOI: 10.3389/fenve.2025.1488965. Section: Water, Waste and Wastewater Engineering. Authors: Raphael Anaadumba, Yigit Bozkurt, Connor Sullivan, Madhavi Pagare, Pradeep Kurup, Benyuan Liu, Mohammad Arif Ul Alam. University of Massachusetts Lowell. Supported by NSF Award No. 2230180 — a $2.5 million Smart and Connected Community grant. This paper addresses the Flint, Michigan water crisis by building a Graph Attention Network that predicts lead contamination in residential drinking water using publicly available housing and municipal data — no expensive lab sampling required.",
+    "Methods: A Graph Attention Network (GAT) was developed using PyTorch, PyTorch Geometric, NetworkX, and GeoPy. Each house in Flint is represented as a node in a graph; edges connect houses based on geodesic distance thresholds, modeling how contamination spreads through geographic proximity. The GAT applies self-attention mechanisms to weigh the influence of neighboring houses adaptively — capturing the spatial reality that lead contamination in one home is strongly related to conditions in surrounding properties. Data was integrated from three sources: Michigan Department of Environmental Quality water testing records (14,000 records from 2016), Zillow real estate database (property age, condition, size, coordinates via web scraping), and ArcGIS parcel records from the City of Flint (location, zoning, valuation). After cleaning and validation, 916 homes met inclusion criteria.",
+    "Dataset and Classification: Lead contamination classified into four levels aligned with EPA standards — Level 0 (below 5 ppb, 59.5% of homes), Level 1 (5-10 ppb), Level 2 (10-15 ppb, 8.2% of homes), Level 3 (15 ppb or greater, 15.6% of homes, triggering EPA action level). The 0.1-mile spatial distance threshold for connecting houses in the graph yielded the highest model accuracy. Feature importance analysis using GraphLIME identified Age of Building, Property Address, Zoning, Parcel, and Housing Condition as the strongest predictors of lead contamination risk — actionable insights that directly inform where municipalities should prioritize inspections.",
+    "Results: The GAT model achieved AUC of 0.93, accuracy of 80.57%, precision of 71.55%, and recall of 93.77% — dramatically outperforming XGBoost (AUC 0.66, accuracy 70%, recall 66.67%) and all published baselines including Bayesian Networks (AUC 0.74) and geostatistical cokriging (AUC 0.76). The 93.77% recall is the critical number for public health: it means the model correctly identifies nearly all contaminated homes, minimizing the risk of missing at-risk families. The GAT consistently outperformed baselines across all three EPA contamination thresholds (5 ppb, 10 ppb, 15 ppb). This work demonstrates that graph-based AI using publicly available housing data can replace costly physical sampling as a first-line screening tool for lead contamination in any city."
    ]},
-  {id:"ssgat",title:"Self-Supervised GAT for Semi-Supervised Health Risk Prediction",
-   venue:"Under Review",domain:"methods",color:"#f59e0b",glow:"#f59e0b",year:2025,status:"Accepted",
-   keywords:["SSGAT","self-supervised","transductive leakage","semi-supervised","contrastive learning","inductive evaluation"],
+  {id:"ssgat",
+   title:"Self-Supervised Graph Attention Networks for Community-Engaged Lead Contamination Risk Assessment",
+   venue:"Nature Portfolio",domain:"methods",color:"#f59e0b",glow:"#f59e0b",year:2025,status:"Accepted",
+   keywords:["SSGAT","self-supervised learning","GAT","lead contamination","Flint Michigan","Andover Massachusetts","cross-city transfer","community engagement","NSF"],
    chunks:[
-    "Title: Self-Supervised Graph Attention Networks for Semi-Supervised Health Risk Prediction (SSGAT). Under peer review, 2025. Proposes SSGAT framework addressing transductive leakage and label scarcity in public health graph prediction.",
-    "Transductive leakage problem: Naive transductive GNN training leaks test-set structural information into training, inflating reported metrics. SSGAT introduces a strict inductive evaluation protocol to prevent this, a key methodological contribution for the GNN evaluation community.",
-    "Methods: Pre-training via masked node reconstruction and contrastive neighborhood objectives. Self-supervised pre-training on graph structure followed by supervised fine-tuning. Paired t-tests and confidence intervals used for statistical validation.",
-    "Results: Applied to lead contamination and clinical audio graph datasets. Outperforms supervised baselines in low-label regimes, with particular gains on underrepresented geographic clusters. Cross-city Andover LOHO results reported."
+    "Title: Self-Supervised Graph Attention Networks for Community-Engaged Lead Contamination Risk Assessment. Accepted for publication, 2025. Authors: Raphael Anaadumba, Nazim A. Belabbaci, Yigit Bozkurt, Connor Sullivan, Pradeep Kurup, Mohammad Arif Ul Alam. University of Massachusetts Lowell. Supported by NSF Award No. 2230180 — a $2.5 million Smart and Connected Community grant. This paper addresses a fundamental limitation in lead contamination AI: existing models treat each property independently, failing to capture how contamination spreads through shared water infrastructure across neighboring homes. We introduce SSGAT — a Self-Supervised Graph Attention Network — that learns spatial relationships between properties using publicly available housing data and transfers that knowledge across cities, enabling risk prediction in municipalities with limited local data.",
+    "Methods: SSGAT represents each residential property as a node in a parcel-based graph, where edges connect properties sharing a parcel identifier — directly modeling shared water infrastructure. A two-layer Graph Attention Network with hidden dimensions 64 and 32 produces 32-dimensional node embeddings. The key innovation is reconstruction-based self-supervised pretraining: before seeing any contamination labels, the model learns to reconstruct node features from neighborhood context, forcing it to learn structural relationships between properties rather than memorizing city-specific patterns. This pretrained model is then fine-tuned on contamination labels. The composite training objective combines class-weighted classification loss and reconstruction loss. Training uses leave-one-ward-out (LOWO) validation across nine Flint wards with five independent random seeds, and all hyperparameters were fixed before transfer evaluation to prevent data leakage.",
+    "Datasets: Two cities, two real datasets under formal data agreements. Flint, Michigan: publicly available lead testing records from the Flint water crisis covering more than 16,000 residential properties across nine administrative wards. Andover, Massachusetts: obtained under a signed data-use agreement with the Town of Andover Water and Sewer Division, comprising 402 lead measurements across 136 unique residential addresses collected from 2001 to 2022 under EPA Lead and Copper Rule compliance. Community engagement with local stakeholders and municipal officials informed feature selection and model interpretability. Lead levels classified under three EPA threshold settings: all lead levels (any vs. none), revised 2024 EPA action level (10 ppb), and historical EPA action level (15 ppb). Parcel-level features from Zillow and ArcGIS include building age, zoning, land valuation, and parcel area.",
+    "Results: SSGAT achieves macro-recall of 0.66 plus or minus 0.03 and accuracy of 0.81 plus or minus 0.02 in cross-city transfer from Flint to Andover — statistically comparable to a fully supervised GAT baseline (recall 0.69, p=0.30) despite requiring no Andover labels during pretraining. Critically, Random Forest — which achieves high accuracy of 0.83 in Flint — completely fails in cross-city transfer, degrading to near-random recall of 0.50 in Andover. This demonstrates a fundamental advantage of graph-based spatial modeling: the spatial inductive biases learned in Flint generalize to new cities, while tabular models learn city-specific correlations that do not transfer. The framework was evaluated across all nine Flint wards and all Andover unsafe properties under leave-one-unsafe-house-out (LOHO) protocol — the most rigorous cross-city evaluation design in the lead contamination literature. This work establishes that self-supervised spatial graph modeling can screen lead risk in data-limited municipalities without requiring extensive local sampling."
    ]}
 ];
 
 const EDGES=[
-  {source:"aaai2026",target:"chase",weight:3},
-  {source:"aaai2026",target:"frontiers",weight:3},
-  {source:"chase",target:"frontiers",weight:3},
-  {source:"aaai2026",target:"ssgat",weight:2},
-  {source:"icassp2026",target:"ssgat",weight:2},
-  {source:"chase",target:"ssgat",weight:1},
-  {source:"icassp2026",target:"aaai2026",weight:1},
+  {source:"aaai2026",  target:"frontiers", weight:3},
+  {source:"aaai2026",  target:"ssgat",     weight:3},
+  {source:"frontiers", target:"ssgat",     weight:3},
+  {source:"icassp2026",target:"chase",     weight:3},
+  {source:"aaai2026",  target:"icassp2026",weight:1},
+  {source:"chase",     target:"ssgat",     weight:1},
+  {source:"icassp2026",target:"ssgat",     weight:1},
 ];
 
 const CHUNKS=[];
 PAPERS.forEach(p=>p.chunks.forEach((text,i)=>CHUNKS.push({paperId:p.id,chunkIdx:i,text,paper:p})));
 
-// ── Real RAG: transformer embeddings ──
 import{pipeline,env}from'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1/dist/transformers.min.js';
 env.allowLocalModels=false;
 let embedder=null,chunkVecs=[];
@@ -371,7 +240,6 @@ async function loadModel(){
     document.getElementById('send-btn').disabled=false;
     document.querySelector('#chat-messages .bubble').textContent=
       'Ready. Ask me anything about the research — I retrieve the most relevant passages semantically before answering.';
-    // hide hint after 4s
     setTimeout(()=>{const h=document.getElementById('graph-hint');if(h)h.style.opacity='0';},4000);
   }catch(e){
     setStatus('error','Model load failed');
@@ -398,17 +266,14 @@ async function retrieve(query,k=4){
   return res;
 }
 
-// ── D3 Graph ──
 let d3nodes;
 function initGraph(){
   const W=window.innerWidth,H=window.innerHeight;
   const svg=d3.select('#graph-svg').attr('viewBox',`0 0 ${W} ${H}`);
   svg.selectAll('*').remove();
 
-  // Glow filter
   const defs=svg.append('defs');
   ['teal','violet','amber'].forEach((name,i)=>{
-    const color=['#00d4aa','#8b5cf6','#f59e0b'][i];
     const f=defs.append('filter').attr('id',`glow-${name}`).attr('x','-50%').attr('y','-50%').attr('width','200%').attr('height','200%');
     f.append('feGaussianBlur').attr('stdDeviation','6').attr('result','blur');
     const merge=f.append('feMerge');
@@ -424,12 +289,10 @@ function initGraph(){
 
   const g=svg.append('g');
 
-  // Edge glow lines
   const link=g.selectAll('.lk').data(EDGES).enter().append('line')
     .attr('stroke','rgba(255,255,255,0.06)')
     .attr('stroke-width',d=>0.5+d.weight*0.4);
 
-  // Pulse rings (hidden by default, shown on RAG highlight)
   const pulseRings=g.selectAll('.pr').data(PAPERS).enter().append('circle')
     .attr('r',46).attr('fill','none')
     .attr('stroke',d=>d.color).attr('stroke-width',1)
@@ -443,12 +306,8 @@ function initGraph(){
       .on('end',(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;})
     )
     .on('click',(_,d)=>showPaper(d))
-    .on('mouseenter',function(_,d){
-      d3.select(this).select('.nd-circle').transition().duration(200).attr('r',38);
-    })
-    .on('mouseleave',function(_,d){
-      d3.select(this).select('.nd-circle').transition().duration(300).attr('r',32);
-    });
+    .on('mouseenter',function(){d3.select(this).select('.nd-circle').transition().duration(200).attr('r',38);})
+    .on('mouseleave',function(){d3.select(this).select('.nd-circle').transition().duration(300).attr('r',32);});
 
   const glowName=d=>d.domain==='env'?'teal':d.domain==='clinical'?'violet':'amber';
 
@@ -462,14 +321,12 @@ function initGraph(){
     .attr('text-anchor','middle').attr('dy','0.35em')
     .attr('font-family','Space Grotesk,sans-serif')
     .attr('font-size','11px').attr('font-weight','600')
-    .attr('fill',d=>d.color)
-    .attr('pointer-events','none')
+    .attr('fill',d=>d.color).attr('pointer-events','none')
     .text(d=>d.venue.split(' ')[0].toUpperCase().substring(0,6));
 
   node.append('text')
     .attr('text-anchor','middle').attr('dy','46px')
-    .attr('font-size','10px').attr('fill','rgba(168,180,204,0.7)')
-    .attr('pointer-events','none')
+    .attr('font-size','10px').attr('fill','rgba(168,180,204,0.7)').attr('pointer-events','none')
     .text(d=>d.venue);
 
   sim.on('tick',()=>{
@@ -505,7 +362,6 @@ window.pulseNodes=function(ids){
   },2200);
 };
 
-// ── Paper drawer ──
 function showPaper(p){
   const drawer=document.getElementById('paper-drawer');
   document.getElementById('drawer-venue').textContent=`${p.venue} · ${p.year} · ${p.status}`;
@@ -517,11 +373,8 @@ function showPaper(p){
     p.keywords.slice(0,5).map(k=>`<span class="kw">${k}</span>`).join('');
   drawer.classList.add('visible');
 }
-window.closeDrawer=function(){
-  document.getElementById('paper-drawer').classList.remove('visible');
-};
+window.closeDrawer=function(){document.getElementById('paper-drawer').classList.remove('visible');};
 
-// ── Chat ──
 window.askQ=function(btn){
   document.getElementById('chat-input').value=btn.textContent;
   document.getElementById('suggestions').style.display='none';
@@ -532,7 +385,6 @@ window.sendMessage=async function(){
   const input=document.getElementById('chat-input');
   const query=input.value.trim();
   if(!query||!embedder)return;
-
   addMsg('user',query);
   input.value='';
   document.getElementById('send-btn').disabled=true;
@@ -541,7 +393,7 @@ window.sendMessage=async function(){
   let hits;
   try{hits=await retrieve(query,4);}catch(e){removeTyping(tid);addMsg('assistant','Embedding error.');document.getElementById('send-btn').disabled=false;return;}
   const context=hits.map((h,i)=>`[Passage ${i+1} — ${h.paper.title} (${h.paper.venue}, ${h.paper.year})]:\n${h.text}`).join('\n\n');
-  const system=`You are a research assistant for Raphael Fontenot, a PhD candidate at UMass Lowell. Answer using ONLY the retrieved passages provided. Be concise (3–5 sentences). Cite by venue e.g. "In the AAAI 2026 paper…". If the answer isn't in the passages, say so.`;
+  const system=`You are a research assistant for Raphael Anaadumba, a PhD candidate at UMass Lowell studying GNNs for public health and clinical audio. Answer using ONLY the retrieved passages provided. Be concise (3-5 sentences). Cite by venue e.g. "In the AAAI 2026 paper...". If the answer is not in the passages, say so.`;
   try{
     const res=await fetch('/api/chat',{
       method:'POST',
