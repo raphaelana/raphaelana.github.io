@@ -3,474 +3,343 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Raphael Anaadumba — PhD Student, Computer Science, UMass Lowell. Graph Neural Networks, Environmental Health AI, Clinical Audio Diagnostics."/>
-  <title>Raphael Anaadumba</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>Raphael Anaadumba · Graph ML for Public Health</title>
+  <meta name="description" content="Raphael Anaadumba, PhD candidate in Computer Science at UMass Lowell. Graph neural networks for environmental health and clinical audio. NeurIPS 2026 reviewer."/>
+
+  <!-- Link previews (LinkedIn, Slack, email) -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Raphael Anaadumba · Graph ML for Public Health"/>
+  <meta property="og:description" content="PhD candidate at UMass Lowell building graph neural networks for lead-contamination risk and speech-based health screening."/>
+  <meta property="og:image" content="https://raphaelana.github.io/photo.jpg"/>
+  <meta property="og:url" content="https://raphaelana.github.io/"/>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232a7b88'/%3E%3Ctext x='32' y='42' font-family='Arial' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3ERA%3C/text%3E%3C/svg%3E"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <!-- New stylesheet. The old style.css is left untouched so research-graph-explorer.html keeps working. -->
+  <link rel="stylesheet" href="site.css"/>
+
+  <!-- Helps Google show a proper profile card for searches of your name -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Raphael Anaadumba",
+    "jobTitle": "PhD Candidate, Computer Science",
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "University of Massachusetts Lowell" },
+    "url": "https://raphaelana.github.io/",
+    "image": "https://raphaelana.github.io/photo.jpg",
+    "sameAs": [
+      "https://scholar.google.com/citations?user=HfziYKYAAAAJ&hl=en",
+      "https://github.com/raphaelana",
+      "https://www.linkedin.com/in/anaadumba-raphael-baa61812a"
+    ]
+  }
+  </script>
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-inner">
-    <a class="nav-brand" href="#" onclick="showPage('about')">Raphael Anaadumba</a>
+    <a class="nav-brand" href="#about">Raphael Anaadumba</a>
     <div class="nav-links">
-      <a href="#" id="nav-about" class="active" onclick="showPage('about')">About</a>
-      <a href="#" id="nav-pubs" onclick="showPage('pubs')">Publications</a>
-      <a href="Raphael_Anaadumba_Atiim Resume.pdf" target="_blank">CV</a>
+      <a href="#about" data-page="about">About</a>
+      <a href="#publications" data-page="publications">Publications</a>
+      <a href="Raphael_Anaadumba_CV.pdf" target="_blank" rel="noopener">CV</a>
       <a href="/research-graph-explorer.html">Research Graph</a>
     </div>
   </div>
 </nav>
 
-<!-- ═══ ABOUT PAGE ═══ -->
-<div class="page active" id="page-about">
+<!-- ═════════════════════ ABOUT ═════════════════════ -->
+<main>
+<section class="page" id="page-about">
   <div class="container">
+    <div class="about-grid">
 
-    <!-- NAME + PHOTO stacked left, bio right -->
-    <div class="about-header">
-      <div class="profile-sidebar">
-        <img src="photo.jpg" alt="Raphael Anaadumba" class="profile-photo-placeholder" style="object-fit:cover;">
-        <h1 class="about-name"><span class="name-first">Raphael</span> Anaadumba</h1>
-        <div class="about-subtitle">PhD Student &middot; Computer Science</div>
-        <div class="social-list">
-          <a class="social-list-item" href="https://www.uml.edu/sciences/computer-science/" target="_blank">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            UMass Lowell
-          </a>
-          <a class="social-list-item" href="mailto:raphael_anaadumba@student.uml.edu">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            Email
-          </a>
-          <a class="social-list-item" href="https://scholar.google.com/citations?user=HfziYKYAAAAJ&hl=en" target="_blank">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            Google Scholar
-          </a>
-          <a class="social-list-item" href="https://github.com/raphaelana" target="_blank">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
-            GitHub
-          </a>
-          <a class="social-list-item" href="https://www.linkedin.com/in/anaadumba-raphael-baa61812a" target="_blank">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-            LinkedIn
-          </a>
+      <!-- Sidebar -->
+      <aside class="profile">
+        <img src="photo.jpg" alt="Raphael Anaadumba" class="profile-photo"/>
+        <div class="profile-name">Raphael Anaadumba</div>
+        <div class="profile-role">PhD Candidate, Computer Science<br/>University of Massachusetts Lowell</div>
+        <ul class="profile-links">
+          <li><a href="mailto:raphael_anaadumba@student.uml.edu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email</a></li>
+          <li><a href="https://scholar.google.com/citations?user=HfziYKYAAAAJ&hl=en" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Google Scholar</a></li>
+          <li><a href="https://github.com/raphaelana" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/anaadumba-raphael-baa61812a" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn</a></li>
+          <li><a href="Raphael_Anaadumba_CV.pdf" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>CV (PDF)</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main column -->
+      <div>
+        <p class="lead">I build graph neural networks for public-health problems where labeled data is scarce and records are incomplete.</p>
+
+        <div class="bio">
+          <p>I am a PhD candidate in Computer Science at <a href="https://www.uml.edu/sciences/computer-science/" target="_blank" rel="noopener">UMass Lowell</a>, advised by Prof. <a href="https://www.uml.edu/sciences/computer-science/people/alam-mohammad-arif-ul.aspx" target="_blank" rel="noopener">Mohammad Arif Ul Alam</a> in the CUBICS Lab and supported by NSF Award #2230180. My work predicts lead contamination in drinking water from public housing, Census, and EPA data, and detects dementia and respiratory disease from everyday audio.</p>
+          <p>The lead-risk work spans Chicago, Flint, and Massachusetts, and I have presented it to the U.S. EPA and the Merrimack River Watershed Council. Before my PhD I worked as a software engineer building backend services and REST APIs.</p>
         </div>
-      </div>
-      <div class="about-header-left">
 
-    <!-- COLLABORATION -->
-    <div class="bio-text" style="margin-top:20px;">
-      <p style="font-weight:700;margin-top:4px;">I am always open to collaboration, whether you are:</p>
-      <ul class="collab-bullets">
-        <li>an experienced researcher seeking a collaborator on GNN, spatial ML, or health AI problems,</li>
-        <li>a peer looking for discussions or joint projects</li>
-      </ul>
-    </div>
+        <div class="stats">
+          <div class="stat"><b>5</b> first-author papers</div>
+          <div class="stat"><b>NeurIPS 2026</b> reviewer</div>
+          <div class="stat"><b>$2.5M</b> NSF-funded project</div>
+        </div>
 
-    <!-- BIO -->
-    <div class="bio-text" style="margin-top:16px;">
-      <p><strong>Bio</strong>: I am a PhD student in Computer Science at <a href="https://www.uml.edu/sciences/computer-science/" target="_blank">UMass Lowell</a>, advised by Prof. <a href="https://www.uml.edu/sciences/computer-science/people/alam-mohammad-arif-ul.aspx" target="_blank">Mohammad Arif Ul Alam</a>, supported by an NSF grant. My research focuses on graph neural networks, spatial machine learning, and health-focused AI — building systems that transform fragmented, privacy-sensitive data into actionable risk maps for cities and clinicians.</p>
-    </div>
+        <div class="callout">
+          <p><strong>Open to research and applied ML internships and full-time roles</strong>, and to collaborations on graph learning, spatial ML, and health AI.</p>
+          <div class="actions">
+            <a href="Raphael_Anaadumba_CV.pdf" target="_blank" rel="noopener">View CV →</a>
+            <a href="mailto:raphael_anaadumba@student.uml.edu">Email me →</a>
+          </div>
+        </div>
 
-    <!-- RESEARCH FOCUS -->
-    <div class="bio-text" style="margin-top:16px;">
-      <p>My work connects two themes: graph-based relational modeling under real-world constraints (incomplete data, privacy regulations, resource-limited deployment), and non-invasive AI diagnostics from everyday audio signals.</p>
-    </div>
-
-    <div class="bio-text" style="margin-top:12px;"><p><strong>Research Focus</strong></p></div>
-    <ul class="research-directions">
-      <li><strong>Environmental Health AI</strong>: Developing spatial Graph Attention Network (GAT) frameworks to predict neighborhood-scale lead contamination in drinking water using publicly available housing, demographic, infrastructure, and geographic data — bypassing costly physical sampling to produce block-level risk scores aligned with EPA regulations.</li>
-      <li><strong>Clinical Audio & Speech Processing</strong>: Applying Graph Neural Networks (GCN/GAT) to non-invasive disease detection — modeling conversational structure for dementia screening (AST+GAT) and classifying lung sounds across six respiratory conditions for edge-device deployment (CNN-GCN).</li>
-    </ul>
-
-    <div class="bio-text" style="margin-top:16px;"><p><strong>Current Directions & Impact</strong></p></div>
-    <ul class="research-directions">
-      <li><strong>Lead Contamination Risk Mapping</strong>: Validated across Chicago (38,000+ water tests), Flint, MI (14,000+ homes), and Massachusetts municipalities. Presented to the U.S. EPA and the Merrimack River Watershed Council. Featured at AAAI 2026.</li>
-      <li><strong>Dementia Screening</strong>: Capturing cognitive decline through inter-segment discourse relationships in spontaneous speech — validated on DementiaBank Pitt Corpus and TAUKADIAL. Presented at IEEE ICASSP 2026.</li>
-      <li><strong>Respiratory Diagnostics</strong>: Graph-based lung sound classification across six clinical conditions on 1,000+ recordings, designed for resource-limited clinical deployment. Presented at ACM/IEEE CHASE 2025.</li>
-    </ul>
-
-    <div class="bio-text" style="margin-top:16px;">
-      <p><strong>Research Interests</strong></p>
-      <p style="margin-top:6px;color:var(--text-mid);">Graph Neural Networks · Spatial & Geographic ML · Environmental Health AI · Medical Audio & Speech Processing · Privacy-Aware ML · Self-Supervised Learning · Edge/Low-Resource Deployment · LLMs for Public-Health Decision Suppor</p>
-    </div>
-
+        <div class="subhead">Research</div>
+        <ul class="focus">
+          <li><b>Environmental health AI</b><span>Spatial graph attention networks that estimate lead-contamination risk from public housing, demographic, and infrastructure data, so cities can target testing where physical sampling is limited.</span></li>
+          <li><b>Clinical audio</b><span>Graph-based models over speech and lung sounds for non-invasive screening: dementia detection from conversational speech (AST + GAT) and respiratory disease classification (GCN).</span></li>
+          <li><b>Current work: learning with few labels</b><span>Self-supervised pretraining, graph-conditioned diffusion models that generate synthetic training records, and transfer across cities.</span></li>
+        </ul>
       </div>
     </div>
 
-    <hr/>
-
-    <!-- NEWS -->
+    <!-- News -->
     <h2 class="section-title">News</h2>
-    <table class="news-table">
-      <tr>
-        <td class="news-date">May 2026</td>
-        <td class="news-content">🔥 <strong>Paper accepted — <em>Nature Scientific Reports</em>.</strong> "Self-Supervised Graph Attention Networks for Community-Engaged Lead Contamination Risk Assessment." First author. In press.</td>
-      </tr>
-      <tr>
-        <td class="news-date">Mar 2026</td>
-        <td class="news-content">📄 Awarded <strong>Springer Nature Reviewer Certificate</strong> — <em>Discover Sustainability</em>.</td>
-      </tr>
-      <tr>
-        <td class="news-date">2026</td>
-        <td class="news-content">🎤 <strong>Paper accepted — AAAI 2026.</strong> Spatial GAT modeling for neighborhood-scale lead contamination risk prediction.</td>
-      </tr>
-      <tr>
-        <td class="news-date">2026</td>
-        <td class="news-content">🎤 <strong>Paper accepted — ICASSP 2026.</strong> Modeling inter-segment relationships in speech for dementia detection via AST + GAT.</td>
-      </tr>
-      <tr>
-        <td class="news-date">Oct 2025</td>
-        <td class="news-content">📄 Awarded <strong>Springer Nature Reviewer Certificate</strong> — <em>Scientific Reports</em>.</td>
-      </tr>
-      <tr>
-        <td class="news-date">2025</td>
-        <td class="news-content">✈️ Received <strong>NSF Student Travel Award</strong> — selected to present at <strong>IEEE/ACM CHASE 2025</strong>, New York.</td>
-      </tr>
-      <tr>
-        <td class="news-date">2025</td>
-        <td class="news-content">📰 <strong>Paper published — Frontiers in Environmental Engineering.</strong> GNN-based water contamination detection from community housing information.</td>
-      </tr>
-      <tr>
-        <td class="news-date">Mar 2024</td>
-        <td class="news-content">📄 Awarded <strong>Springer Nature Reviewer Certificate</strong> — <em>The Journal of Supercomputing</em>.</td>
-      </tr>
-      <tr>
-        <td class="news-date">Jan 2023</td>
-        <td class="news-content">🎓 Joined <strong>CUBICS Lab, UMass Lowell</strong> as a PhD student in Computer Science.</td>
-      </tr>
-    </table>
+    <ul class="news" id="news">
+      <li><time>Sep 2026</time><div>Teaching Assistant for COMP 3050 Computer Architecture at UMass Lowell.</div></li>
+      <li><time>Aug 2026</time><div>Paper published in <strong>Scientific Reports</strong> (Nature Portfolio): <a href="https://doi.org/10.1038/s41598-026-52965-y" target="_blank" rel="noopener">Self-Supervised Graph Attention Networks for Community-Engaged Lead Contamination Risk Assessment</a>.</div></li>
+      <li><time>Jul 2026</time><div>Reviewer for <strong>NeurIPS 2026</strong>, Evaluations &amp; Datasets Track.</div></li>
+      <li><time>May 2026</time><div>Paper at <strong>ICASSP 2026</strong>: dementia detection from speech with Audio Spectrogram Transformers and graph attention.</div></li>
+      <li><time>Mar 2026</time><div>Springer Nature reviewer certificate, <em>Discover Sustainability</em>.</div></li>
+      <li><time>Jan 2026</time><div>Paper at <strong>AAAI 2026</strong> (IAAI track): spatial GAT for neighborhood-scale lead-contamination risk.</div></li>
+      <li class="news-more"><time>Oct 2025</time><div>Springer Nature reviewer certificate, <em>Scientific Reports</em>.</div></li>
+      <li class="news-more"><time>Jun 2025</time><div><strong>NSF Student Travel Award</strong> to present at IEEE/ACM CHASE 2025, New York.</div></li>
+      <li class="news-more"><time>Mar 2025</time><div>Paper published in <strong>Frontiers in Environmental Engineering</strong>: GNN-based water contamination detection from community housing information.</div></li>
+      <li class="news-more"><time>Mar 2024</time><div>Springer Nature reviewer certificate, <em>The Journal of Supercomputing</em>.</div></li>
+      <li class="news-more"><time>Jan 2023</time><div>Joined the CUBICS Lab at UMass Lowell as a PhD student.</div></li>
+    </ul>
+    <button class="link-btn" id="news-toggle" aria-expanded="false">Show older news</button>
 
-  </div>
-</div>
-
-<!-- ═══ PUBLICATIONS PAGE ═══ -->
-<div class="page" id="page-pubs">
-  <div class="container">
-
-    <h2 class="section-title">Selected Publications</h2>
-    <p style="font-size:.9rem;color:var(--text-mid);margin-bottom:24px;">
-      6 peer-reviewed papers · 4 as first author ·
-      <a href="https://scholar.google.com/citations?user=HfziYKYAAAAJ&hl=en" target="_blank">Google Scholar ↗</a>
-    </p>
-
-    <div class="pub-filters">
-      <button class="pub-filter active" onclick="filterPubs('all',this)">All</button>
-      <button class="pub-filter" onclick="filterPubs('env',this)">Environmental Health</button>
-      <button class="pub-filter" onclick="filterPubs('med',this)">Medical AI</button>
-      <button class="pub-filter" onclick="filterPubs('fa',this)">First Author</button>
+    <!-- Service & awards -->
+    <h2 class="section-title">Service, Teaching &amp; Awards</h2>
+    <div class="service-grid">
+      <div class="service-block">
+        <h3>Peer review</h3>
+        <ul>
+          <li><strong>NeurIPS 2026</strong><small>Evaluations &amp; Datasets Track</small></li>
+          <!-- If your Nature review was for a different Nature-branded journal, name it here. -->
+          <li><strong>Scientific Reports</strong><small>Nature Portfolio · certified reviewer</small></li>
+          <li><strong>The Journal of Supercomputing</strong><small>Springer Nature · certified reviewer</small></li>
+          <li><strong>Discover Sustainability</strong><small>Springer Nature · certified reviewer</small></li>
+        </ul>
+      </div>
+      <div class="service-block">
+        <h3>Awards</h3>
+        <ul>
+          <li><strong>NSF Student Travel Award</strong><small>IEEE/ACM CHASE 2025</small></li>
+          <li><strong>Top-3, SAND Challenge</strong><small>Dysarthria severity classification from speech</small></li>
+        </ul>
+        <h3>Teaching &amp; outreach</h3>
+        <ul>
+          <li><strong>Teaching Assistant</strong>, COMP 3050 Computer Architecture<small>UMass Lowell · Fall 2026</small></li>
+          <li><strong>Research presentations</strong><small>U.S. EPA · Merrimack River Watershed Council</small></li>
+        </ul>
+      </div>
     </div>
+  </div>
+</section>
 
-    <!-- 2026 -->
+<!-- ═════════════════════ PUBLICATIONS ═════════════════════ -->
+<section class="page" id="page-publications">
+  <div class="container">
+    <h2 class="section-title" style="margin-top:0">Publications</h2>
+    <p class="pubs-intro">Peer-reviewed, first-authored papers. Full list on <a href="https://scholar.google.com/citations?user=HfziYKYAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a></p>
+
     <div class="pub-year">2026</div>
 
-    <!-- Nature Scientific Reports -->
-    <div class="pub-entry" data-tags="env fa">
-      <div class="pub-thumb">
-        <svg viewBox="0 0 140 90" xmlns="http://www.w3.org/2000/svg">
-          <rect width="140" height="90" fill="#f0f8f0"/>
-          <circle cx="70" cy="45" r="10" fill="#a8d8a8" stroke="#2d6a2d" stroke-width="1.2"/>
-          <circle cx="30" cy="25" r="7" fill="#c8e8c8" stroke="#2d6a2d" stroke-width="1"/>
-          <circle cx="110" cy="25" r="7" fill="#c8e8c8" stroke="#2d6a2d" stroke-width="1"/>
-          <circle cx="20" cy="65" r="6" fill="#d8f0d8" stroke="#2d6a2d" stroke-width=".8"/>
-          <circle cx="55" cy="72" r="6" fill="#d8f0d8" stroke="#2d6a2d" stroke-width=".8"/>
-          <circle cx="95" cy="72" r="6" fill="#d8f0d8" stroke="#2d6a2d" stroke-width=".8"/>
-          <circle cx="120" cy="62" r="6" fill="#d8f0d8" stroke="#2d6a2d" stroke-width=".8"/>
-          <line x1="70" y1="45" x2="30" y2="25" stroke="#2d6a2d" stroke-width=".8" opacity=".5"/>
-          <line x1="70" y1="45" x2="110" y2="25" stroke="#2d6a2d" stroke-width=".8" opacity=".5"/>
-          <line x1="70" y1="45" x2="20" y2="65" stroke="#2d6a2d" stroke-width=".8" opacity=".5"/>
-          <line x1="70" y1="45" x2="55" y2="72" stroke="#2d6a2d" stroke-width=".8" opacity=".5"/>
-          <line x1="70" y1="45" x2="95" y2="72" stroke="#2d6a2d" stroke-width=".8" opacity=".5"/>
-          <line x1="70" y1="45" x2="120" y2="62" stroke="#2d6a2d" stroke-width=".8" opacity=".5"/>
-          <text x="70" y="12" text-anchor="middle" font-size="7" fill="#2d6a2d" font-family="monospace">Self-supervised GAT</text>
-        </svg>
-      </div>
-      <div class="pub-body">
-        <div class="pub-tags">
-          <span class="pub-tag nat">Nature</span>
-          <span class="pub-tag env">Environmental</span>
+    <!-- Scientific Reports -->
+    <article class="pub">
+      <div><span class="venue-badge">Sci. Reports<small>Nature Portfolio</small></span></div>
+      <div>
+        <div class="pub-title"><a href="https://doi.org/10.1038/s41598-026-52965-y" target="_blank" rel="noopener">Self-Supervised Graph Attention Networks for Community-Engaged Lead Contamination Risk Assessment</a></div>
+        <!-- TODO: complete the author list from the published version -->
+        <div class="pub-authors"><span class="me">Raphael Anaadumba</span>, Nazim A. Belabbaci, Yigit Bozkurt, Connor Sullivan, et al.</div>
+        <div class="pub-venue">Scientific Reports, 2026<span class="pub-topic">Environmental health</span></div>
+        <div class="pub-tldr">Self-supervised pretraining lets a GAT learn lead risk from public housing and historical testing data: <b>90% accuracy, 0.836 AUC</b>, up to 12% above prior state of the art, with a five-fold reduction in screening cost.</div>
+        <div class="pub-links">
+          <a href="https://doi.org/10.1038/s41598-026-52965-y" target="_blank" rel="noopener">Paper</a>
+          <button data-bib="bib-sr">Cite</button>
         </div>
-        <div class="pub-title">
-          Self-Supervised Graph Attention Networks for Community-Engaged Lead Contamination Risk Assessment
-          <span class="pub-status-pill">Accepted · In Press</span>
-        </div>
-        <div class="pub-authors"><span class="me">Raphael Anaadumba</span> et al.</div>
-        <div class="pub-venue">In <strong>Nature Scientific Reports</strong>, 2026</div>
-        <div class="pub-actions">
-          <a class="pub-btn" href="#">Paper</a>
-          <button class="pub-btn" onclick="toggleBib('bib-nat')">BIB</button>
-        </div>
-        <pre class="bibtex-block" id="bib-nat">@article{anaadumba2026selfsupervised,
-  title   = {Self-Supervised Graph Attention Networks for
-             Community-Engaged Lead Contamination Risk Assessment},
-  author  = {Anaadumba, Raphael and others},
+        <div class="bibtex" id="bib-sr"><button class="copy">Copy</button><pre>@article{anaadumba2026selfsupervised,
+  title   = {Self-Supervised Graph Attention Networks for Community-Engaged
+             Lead Contamination Risk Assessment},
+  author  = {Anaadumba, Raphael and Belabbaci, Nazim A. and Bozkurt, Yigit
+             and Sullivan, Connor and others},
   journal = {Scientific Reports},
   year    = {2026},
-  note    = {Accepted, In Press}
-}</pre>
+  doi     = {10.1038/s41598-026-52965-y}
+}</pre></div>
       </div>
-    </div>
+    </article>
 
-    <!-- AAAI 2026 -->
-    <div class="pub-entry" data-tags="env fa">
-      <div class="pub-thumb">
-        <svg viewBox="0 0 140 90" xmlns="http://www.w3.org/2000/svg">
-          <rect width="140" height="90" fill="#f0f4f8"/>
-          <rect x="8" y="8" width="14" height="10" rx="1" fill="#e84040" stroke="#c02020" stroke-width=".6" opacity=".85"/>
-          <rect x="25" y="8" width="14" height="10" rx="1" fill="#b8cce4" stroke="#5a8ab8" stroke-width=".6" opacity=".7"/>
-          <rect x="42" y="8" width="14" height="10" rx="1" fill="#f0a0a0" stroke="#c05050" stroke-width=".6"/>
-          <rect x="59" y="8" width="14" height="10" rx="1" fill="#e84040" stroke="#c02020" stroke-width=".6" opacity=".85"/>
-          <rect x="76" y="8" width="14" height="10" rx="1" fill="#b8cce4" stroke="#5a8ab8" stroke-width=".6"/>
-          <rect x="93" y="8" width="20" height="10" rx="1" fill="#f0a0a0" stroke="#c05050" stroke-width=".6"/>
-          <rect x="8" y="22" width="14" height="10" rx="1" fill="#b8cce4" stroke="#5a8ab8" stroke-width=".6"/>
-          <rect x="25" y="22" width="14" height="10" rx="1" fill="#e84040" stroke="#c02020" stroke-width=".6" opacity=".85"/>
-          <rect x="42" y="22" width="14" height="10" rx="1" fill="#b8cce4" stroke="#5a8ab8" stroke-width=".6"/>
-          <rect x="59" y="22" width="14" height="10" rx="1" fill="#f0a0a0" stroke="#c05050" stroke-width=".6"/>
-          <rect x="76" y="22" width="14" height="10" rx="1" fill="#e84040" stroke="#c02020" stroke-width=".6" opacity=".85"/>
-          <rect x="93" y="22" width="20" height="10" rx="1" fill="#b8cce4" stroke="#5a8ab8" stroke-width=".6"/>
-          <rect x="8" y="36" width="14" height="10" rx="1" fill="#f0a0a0" stroke="#c05050" stroke-width=".6"/>
-          <rect x="25" y="36" width="14" height="10" rx="1" fill="#b8cce4" stroke="#5a8ab8" stroke-width=".6"/>
-          <rect x="42" y="36" width="14" height="10" rx="1" fill="#e84040" stroke="#c02020" stroke-width=".6" opacity=".85"/>
-          <rect x="59" y="36" width="14" height="10" rx="1" fill="#b8cce4" stroke="#5a8ab8" stroke-width=".6"/>
-          <rect x="76" y="36" width="14" height="10" rx="1" fill="#f0a0a0" stroke="#c05050" stroke-width=".6"/>
-          <rect x="93" y="36" width="20" height="10" rx="1" fill="#e84040" stroke="#c02020" stroke-width=".6" opacity=".85"/>
-          <rect x="8" y="56" width="7" height="7" rx="1" fill="#e84040"/><text x="18" y="63" font-size="5.5" fill="#4a4a4a" font-family="monospace">High risk</text>
-          <rect x="60" y="56" width="7" height="7" rx="1" fill="#b8cce4"/><text x="70" y="63" font-size="5.5" fill="#4a4a4a" font-family="monospace">Low risk</text>
-          <text x="60" y="76" text-anchor="middle" font-size="5.5" fill="#5a8ab8" font-family="monospace">739 census blocks · Chicago</text>
-        </svg>
-      </div>
-      <div class="pub-body">
-        <div class="pub-tags">
-          <span class="pub-tag env">Environmental</span>
-        </div>
-        <div class="pub-title">
-          <a href="https://ojs.aaai.org/index.php/AAAI/article/view/41455" target="_blank">Spatial Graph Attention Network Modeling for Neighborhood-Scale Lead Contamination Risk Prediction Using Publicly Available Data</a>
-        </div>
+    <!-- AAAI / IAAI -->
+    <article class="pub">
+      <div><span class="venue-badge">AAAI 2026<small>IAAI track</small></span></div>
+      <div>
+        <div class="pub-title"><a href="https://ojs.aaai.org/index.php/AAAI/article/view/41455" target="_blank" rel="noopener">Spatial Graph Attention Network Modeling for Neighborhood-Scale Lead Contamination Risk Prediction Using Publicly Available Data</a></div>
         <div class="pub-authors"><span class="me">Raphael Anaadumba</span>, Nazim A. Belabbaci, Connor Sullivan, Anton Kovalev, Yidong Zhu, Pradeep Kurup, Mohammad Arif Ul Alam</div>
-        <div class="pub-venue">In <strong>Proceedings of the AAAI Conference on Artificial Intelligence (AAAI-26)</strong>, 2026</div>
-        <div class="pub-actions">
-          <a class="pub-btn" href="https://ojs.aaai.org/index.php/AAAI/article/view/41455" target="_blank">Paper</a>
-          <a class="pub-btn" href="#">Code</a>
-          <a class="pub-btn" href="#">Slides</a>
-          <button class="pub-btn" onclick="toggleBib('bib-aaai')">BIB</button>
+        <div class="pub-venue">Proceedings of the AAAI Conference on Artificial Intelligence, 40(47), 2026<span class="pub-topic">Environmental health</span></div>
+        <div class="pub-tldr">A directed spatial GAT over 38,000+ EPA water tests in 739 census block groups: <b>84.8% balanced accuracy</b> and <b>44% fewer false positives</b> than spatial-only baselines.</div>
+        <div class="pub-links">
+          <a href="https://ojs.aaai.org/index.php/AAAI/article/view/41455" target="_blank" rel="noopener">Paper</a>
+          <a href="https://doi.org/10.1609/aaai.v40i47.41455" target="_blank" rel="noopener">DOI</a>
+          <button data-bib="bib-aaai">Cite</button>
         </div>
-        <pre class="bibtex-block" id="bib-aaai">@inproceedings{anaadumba2026spatial,
-  title     = {Spatial Graph Attention Network Modeling for
-               Neighborhood-Scale Lead Contamination Risk
-               Prediction Using Publicly Available Data},
-  author    = {Anaadumba, Raphael and Belabbaci, Nazim A.
-               and Sullivan, Connor and Kovalev, Anton
-               and Zhu, Yidong and Kurup, Pradeep
+        <div class="bibtex" id="bib-aaai"><button class="copy">Copy</button><pre>@inproceedings{anaadumba2026spatial,
+  title     = {Spatial Graph Attention Network Modeling for Neighborhood-Scale
+               Lead Contamination Risk Prediction Using Publicly Available Data},
+  author    = {Anaadumba, Raphael and Belabbaci, Nazim A. and Sullivan, Connor
+               and Kovalev, Anton and Zhu, Yidong and Kurup, Pradeep
                and Alam, Mohammad Arif Ul},
-  booktitle = {Proceedings of the AAAI Conference on
-               Artificial Intelligence},
-  year      = {2026}
-}</pre>
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume    = {40},
+  number    = {47},
+  year      = {2026},
+  doi       = {10.1609/aaai.v40i47.41455}
+}</pre></div>
       </div>
-    </div>
+    </article>
 
-    <!-- ICASSP 2026 -->
-    <div class="pub-entry" data-tags="med fa">
-      <div class="pub-thumb">
-        <svg viewBox="0 0 140 90" xmlns="http://www.w3.org/2000/svg">
-          <rect width="140" height="90" fill="#f4f0f8"/>
-          <rect x="6" y="26" width="5" height="10" rx="1" fill="#9b7fc8" opacity=".6"/>
-          <rect x="13" y="18" width="5" height="26" rx="1" fill="#9b7fc8" opacity=".75"/>
-          <rect x="20" y="14" width="5" height="34" rx="1" fill="#7a5cb8" opacity=".85"/>
-          <rect x="27" y="21" width="5" height="20" rx="1" fill="#9b7fc8" opacity=".7"/>
-          <rect x="34" y="10" width="5" height="42" rx="1" fill="#5a3ca8" opacity=".9"/>
-          <rect x="41" y="17" width="5" height="30" rx="1" fill="#7a5cb8" opacity=".8"/>
-          <rect x="48" y="23" width="5" height="18" rx="1" fill="#9b7fc8" opacity=".7"/>
-          <rect x="55" y="13" width="5" height="38" rx="1" fill="#6a4cb8" opacity=".85"/>
-          <rect x="62" y="20" width="5" height="22" rx="1" fill="#9b7fc8" opacity=".7"/>
-          <rect x="69" y="26" width="5" height="12" rx="1" fill="#b09fd8" opacity=".6"/>
-          <rect x="76" y="18" width="5" height="28" rx="1" fill="#8a6cc8" opacity=".75"/>
-          <rect x="83" y="14" width="5" height="34" rx="1" fill="#7a5cb8" opacity=".8"/>
-          <rect x="90" y="24" width="5" height="16" rx="1" fill="#b09fd8" opacity=".65"/>
-          <rect x="97" y="18" width="5" height="30" rx="1" fill="#8a6cc8" opacity=".75"/>
-          <rect x="104" y="28" width="5" height="8" rx="1" fill="#c0b0e0" opacity=".6"/>
-          <rect x="111" y="22" width="5" height="18" rx="1" fill="#9b7fc8" opacity=".7"/>
-          <circle cx="37" cy="8" r="3.5" fill="none" stroke="#5a3ca8" stroke-width="1" stroke-dasharray="2,1"/>
-          <circle cx="58" cy="11" r="3.5" fill="none" stroke="#5a3ca8" stroke-width="1" stroke-dasharray="2,1"/>
-          <line x1="37" y1="8" x2="58" y2="11" stroke="#5a3ca8" stroke-width=".7" stroke-dasharray="2,1" opacity=".5"/>
-          <text x="70" y="72" text-anchor="middle" font-size="5.5" fill="#7a5cb8" font-family="monospace">AST + GAT · Dementia Detection</text>
-        </svg>
-      </div>
-      <div class="pub-body">
-        <div class="pub-tags">
-          <span class="pub-tag med">Medical AI</span>
-        </div>
-        <div class="pub-title">
-          <a href="https://ieeexplore.ieee.org/abstract/document/11464316" target="_blank">Modeling Inter-Segment Relationships in Speech for Dementia Detection with Audio Spectrogram Transformers and Graph Attention Networks</a>
-        </div>
+    <!-- ICASSP -->
+    <article class="pub">
+      <div><span class="venue-badge">ICASSP 2026<small>IEEE</small></span></div>
+      <div>
+        <div class="pub-title"><a href="https://ieeexplore.ieee.org/abstract/document/11464316" target="_blank" rel="noopener">Modeling Inter-Segment Relationships in Speech for Dementia Detection with Audio Spectrogram Transformers and Graph Attention Networks</a></div>
         <div class="pub-authors"><span class="me">Raphael Anaadumba</span>, Nazim A. Belabbaci, Anton Kovalev, Mohammad Arif Ul Alam</div>
-        <div class="pub-venue">In <strong>IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)</strong>, 2026</div>
-        <div class="pub-actions">
-          <a class="pub-btn" href="https://ieeexplore.ieee.org/abstract/document/11464316" target="_blank">Paper</a>
-          <a class="pub-btn" href="#">Code</a>
-          <button class="pub-btn" onclick="toggleBib('bib-icassp')">BIB</button>
+        <div class="pub-venue">IEEE International Conference on Acoustics, Speech and Signal Processing, 2026<span class="pub-topic">Clinical audio</span></div>
+        <div class="pub-tldr">Links speech segments into a graph on top of Audio Spectrogram Transformer features: <b>80.5% accuracy on Pitt Corpus</b> and <b>81.8% on TAUKADIAL</b>; temporal edges carry the MCI signal.</div>
+        <div class="pub-links">
+          <a href="https://ieeexplore.ieee.org/abstract/document/11464316" target="_blank" rel="noopener">Paper</a>
+          <a href="https://doi.org/10.1109/ICASSP55912.2026.11464316" target="_blank" rel="noopener">DOI</a>
+          <button data-bib="bib-icassp">Cite</button>
         </div>
-        <pre class="bibtex-block" id="bib-icassp">@inproceedings{anaadumba2026modeling,
-  title     = {Modeling Inter-Segment Relationships in Speech
-               for Dementia Detection with Audio Spectrogram
-               Transformers and Graph Attention Networks},
-  author    = {Anaadumba, Raphael and Belabbaci, Nazim A.
-               and Kovalev, Anton and Alam, Mohammad Arif Ul},
-  booktitle = {IEEE International Conference on Acoustics,
-               Speech and Signal Processing (ICASSP)},
+        <div class="bibtex" id="bib-icassp"><button class="copy">Copy</button><pre>@inproceedings{anaadumba2026modeling,
+  title     = {Modeling Inter-Segment Relationships in Speech for Dementia
+               Detection with Audio Spectrogram Transformers and Graph
+               Attention Networks},
+  author    = {Anaadumba, Raphael and Belabbaci, Nazim A. and Kovalev, Anton
+               and Alam, Mohammad Arif Ul},
+  booktitle = {IEEE International Conference on Acoustics, Speech and
+               Signal Processing (ICASSP)},
   year      = {2026},
   doi       = {10.1109/ICASSP55912.2026.11464316}
-}</pre>
+}</pre></div>
       </div>
-    </div>
+    </article>
 
-    <!-- 2025 -->
     <div class="pub-year">2025</div>
 
-    <!-- ACM/IEEE CHASE 2025 -->
-    <div class="pub-entry" data-tags="med fa">
-      <div class="pub-thumb">
-        <svg viewBox="0 0 140 90" xmlns="http://www.w3.org/2000/svg">
-          <rect width="140" height="90" fill="#f0f4fc"/>
-          <polyline points="6,42 14,42 18,26 22,58 26,34 30,50 34,42 42,42 46,21 50,63 54,38 58,46 62,42 70,42 74,28 78,56 82,36 86,48 90,42 98,42 102,30 106,54 110,40 114,44 118,42" fill="none" stroke="#3a6bc8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="18" cy="24" r="3.5" fill="#a0b8e8" stroke="#3a6bc8" stroke-width=".8"/>
-          <circle cx="46" cy="20" r="3.5" fill="#a0b8e8" stroke="#3a6bc8" stroke-width=".8"/>
-          <circle cx="74" cy="27" r="3.5" fill="#a0b8e8" stroke="#3a6bc8" stroke-width=".8"/>
-          <circle cx="102" cy="29" r="3.5" fill="#a0b8e8" stroke="#3a6bc8" stroke-width=".8"/>
-          <line x1="18" y1="24" x2="46" y2="20" stroke="#3a6bc8" stroke-width=".5" opacity=".4" stroke-dasharray="2,1"/>
-          <line x1="46" y1="20" x2="74" y2="27" stroke="#3a6bc8" stroke-width=".5" opacity=".4" stroke-dasharray="2,1"/>
-          <line x1="74" y1="27" x2="102" y2="29" stroke="#3a6bc8" stroke-width=".5" opacity=".4" stroke-dasharray="2,1"/>
-          <text x="60" y="8" text-anchor="middle" font-size="5.5" fill="#3a6bc8" font-family="monospace">CNN-GCN · Lung sounds</text>
-          <text x="60" y="80" text-anchor="middle" font-size="5.5" fill="#3a6bc8" font-family="monospace">1,000+ clinical recordings</text>
-        </svg>
-      </div>
-      <div class="pub-body">
-        <div class="pub-tags">
-          <span class="pub-tag med">Medical AI</span>
-        </div>
-        <div class="pub-title">
-          <a href="https://dl.acm.org/doi/10.1145/3721201.3721402" target="_blank">Enhancing Respiratory Disease Diagnosis with Graph Convolutional Networks Through Non-Speech Audio Synthesis</a>
-        </div>
+    <!-- CHASE -->
+    <article class="pub">
+      <div><span class="venue-badge">CHASE 2025<small>IEEE/ACM</small></span></div>
+      <div>
+        <div class="pub-title"><a href="https://dl.acm.org/doi/10.1145/3721201.3721402" target="_blank" rel="noopener">Enhancing Respiratory Disease Diagnosis with Graph Convolutional Networks Through Non-Speech Audio Synthesis</a></div>
         <div class="pub-authors"><span class="me">Raphael Anaadumba</span>, Nazim A. Belabbaci, Mohammad Arif Ul Alam</div>
-        <div class="pub-venue">In <strong>ACM/IEEE International Conference on Connected Health: Applications, Systems and Engineering Technologies (CHASE)</strong>, 2025</div>
-        <div class="pub-actions">
-          <a class="pub-btn" href="https://dl.acm.org/doi/10.1145/3721201.3721402" target="_blank">Paper</a>
-          <a class="pub-btn" href="#">Code</a>
-          <a class="pub-btn" href="#">Slides</a>
-          <button class="pub-btn" onclick="toggleBib('bib-chase')">BIB</button>
+        <div class="pub-venue">IEEE/ACM Conference on Connected Health: Applications, Systems and Engineering Technologies, 2025<span class="pub-topic">Clinical audio</span></div>
+        <div class="pub-tldr">Treats lung-sound recordings as graphs instead of flat feature vectors; GCN classification across six respiratory conditions on <b>1,000+ clinical recordings</b>.</div>
+        <div class="pub-links">
+          <a href="https://dl.acm.org/doi/10.1145/3721201.3721402" target="_blank" rel="noopener">Paper</a>
+          <button data-bib="bib-chase">Cite</button>
         </div>
-        <pre class="bibtex-block" id="bib-chase">@inproceedings{anaadumba2025respiratory,
-  title     = {Enhancing Respiratory Disease Diagnosis with
-               Graph Convolutional Networks Through
-               Non-Speech Audio Synthesis},
-  author    = {Anaadumba, Raphael and Belabbaci, Nazim A.
-               and Alam, Mohammad Arif Ul},
-  booktitle = {ACM/IEEE CHASE},
+        <div class="bibtex" id="bib-chase"><button class="copy">Copy</button><pre>@inproceedings{anaadumba2025respiratory,
+  title     = {Enhancing Respiratory Disease Diagnosis with Graph Convolutional
+               Networks Through Non-Speech Audio Synthesis},
+  author    = {Anaadumba, Raphael and Belabbaci, Nazim A. and Alam, Mohammad Arif Ul},
+  booktitle = {IEEE/ACM Conference on Connected Health: Applications, Systems
+               and Engineering Technologies (CHASE)},
   year      = {2025},
   doi       = {10.1145/3721201.3721402}
-}</pre>
+}</pre></div>
       </div>
-    </div>
+    </article>
 
-    <!-- Frontiers 2025 -->
-    <div class="pub-entry" data-tags="env fa">
-      <div class="pub-thumb">
-        <svg viewBox="0 0 140 90" xmlns="http://www.w3.org/2000/svg">
-          <rect width="140" height="90" fill="#f8f4f0"/>
-          <rect x="8" y="12" width="14" height="10" rx="1" fill="#f0c080" stroke="#b07820" stroke-width=".6"/>
-          <rect x="25" y="12" width="14" height="10" rx="1" fill="#e88040" stroke="#b05010" stroke-width=".6"/>
-          <rect x="42" y="12" width="14" height="10" rx="1" fill="#f8e0c0" stroke="#c09040" stroke-width=".6"/>
-          <rect x="59" y="12" width="14" height="10" rx="1" fill="#e88040" stroke="#b05010" stroke-width=".6"/>
-          <rect x="76" y="12" width="14" height="10" rx="1" fill="#f0c080" stroke="#b07820" stroke-width=".6"/>
-          <rect x="93" y="12" width="14" height="10" rx="1" fill="#cc4010" stroke="#901000" stroke-width=".6"/>
-          <rect x="110" y="12" width="20" height="10" rx="1" fill="#f8e0c0" stroke="#c09040" stroke-width=".6"/>
-          <rect x="8" y="26" width="14" height="10" rx="1" fill="#cc4010" stroke="#901000" stroke-width=".6"/>
-          <rect x="25" y="26" width="14" height="10" rx="1" fill="#f8e0c0" stroke="#c09040" stroke-width=".6"/>
-          <rect x="42" y="26" width="14" height="10" rx="1" fill="#f0c080" stroke="#b07820" stroke-width=".6"/>
-          <rect x="59" y="26" width="14" height="10" rx="1" fill="#cc4010" stroke="#901000" stroke-width=".6"/>
-          <rect x="76" y="26" width="14" height="10" rx="1" fill="#f8e0c0" stroke="#c09040" stroke-width=".6"/>
-          <rect x="93" y="26" width="14" height="10" rx="1" fill="#e88040" stroke="#b05010" stroke-width=".6"/>
-          <rect x="110" y="26" width="20" height="10" rx="1" fill="#f0c080" stroke="#b07820" stroke-width=".6"/>
-          <rect x="8" y="56" width="8" height="7" rx="1" fill="#cc4010"/><text x="19" y="63" font-size="6" fill="#4a4a4a" font-family="monospace">High</text>
-          <rect x="42" y="56" width="8" height="7" rx="1" fill="#e88040"/><text x="53" y="63" font-size="6" fill="#4a4a4a" font-family="monospace">Med</text>
-          <rect x="76" y="56" width="8" height="7" rx="1" fill="#f8e0c0"/><text x="87" y="63" font-size="6" fill="#4a4a4a" font-family="monospace">Low</text>
-          <text x="70" y="78" text-anchor="middle" font-size="5.5" fill="#b07820" font-family="monospace">14,000+ homes · Flint MI · 0.93 AUC</text>
-        </svg>
-      </div>
-      <div class="pub-body">
-        <div class="pub-tags">
-          <span class="pub-tag env">Environmental</span>
-        </div>
-        <div class="pub-title">
-          <a href="https://www.frontiersin.org/journals/environmental-engineering/articles/10.3389/fenve.2025.1488965/full" target="_blank">Graph Neural Network-Based Water Contamination Detection from Community Housing Information</a>
-        </div>
+    <!-- Frontiers -->
+    <article class="pub">
+      <div><span class="venue-badge">Frontiers<small>Env. Engineering</small></span></div>
+      <div>
+        <div class="pub-title"><a href="https://www.frontiersin.org/journals/environmental-engineering/articles/10.3389/fenve.2025.1488965/full" target="_blank" rel="noopener">Graph Neural Network-Based Water Contamination Detection from Community Housing Information</a></div>
         <div class="pub-authors"><span class="me">Raphael Anaadumba</span>, Yigit Bozkurt, Connor Sullivan, Madhavi Pagare, Pradeep Kurup, Benyuan Liu, Mohammad Arif Ul Alam</div>
-        <div class="pub-venue">In <strong>Frontiers in Environmental Engineering</strong>, Vol. 4, 2025 · DOI: 10.3389/fenve.2025.1488965</div>
-        <div class="pub-actions">
-          <a class="pub-btn" href="https://www.frontiersin.org/journals/environmental-engineering/articles/10.3389/fenve.2025.1488965/full" target="_blank">Paper</a>
-          <a class="pub-btn" href="#">Code</a>
-          <button class="pub-btn" onclick="toggleBib('bib-flint')">BIB</button>
+        <div class="pub-venue">Frontiers in Environmental Engineering, vol. 4, 2025<span class="pub-topic">Environmental health</span></div>
+        <div class="pub-tldr">Links parcel, Zillow, and water-test records for <b>916 Flint homes</b> (from ~14,000 tests); the GAT reaches <b>0.93 AUC</b> and 0.93 recall versus 0.67 for XGBoost, with no household sampling.</div>
+        <div class="pub-links">
+          <a href="https://www.frontiersin.org/journals/environmental-engineering/articles/10.3389/fenve.2025.1488965/full" target="_blank" rel="noopener">Paper</a>
+          <a href="https://doi.org/10.3389/fenve.2025.1488965" target="_blank" rel="noopener">DOI</a>
+          <button data-bib="bib-flint">Cite</button>
         </div>
-        <pre class="bibtex-block" id="bib-flint">@article{anaadumba2025gnn,
-  title   = {Graph Neural Network-Based Water Contamination
-             Detection from Community Housing Information},
-  author  = {Anaadumba, Raphael and Bozkurt, Yigit
-             and Sullivan, Connor and Pagare, Madhavi
-             and Kurup, Pradeep and Liu, Benyuan
+        <div class="bibtex" id="bib-flint"><button class="copy">Copy</button><pre>@article{anaadumba2025gnn,
+  title   = {Graph Neural Network-Based Water Contamination Detection from
+             Community Housing Information},
+  author  = {Anaadumba, Raphael and Bozkurt, Yigit and Sullivan, Connor
+             and Pagare, Madhavi and Kurup, Pradeep and Liu, Benyuan
              and Alam, Mohammad Arif Ul},
   journal = {Frontiers in Environmental Engineering},
   volume  = {4},
   year    = {2025},
   doi     = {10.3389/fenve.2025.1488965}
-}</pre>
+}</pre></div>
       </div>
-    </div>
-
+    </article>
   </div>
-</div>
+</section>
+</main>
 
-<!-- ═══ FOOTER ═══ -->
 <footer class="footer">
-  <span id="visit-counter" style="margin-right:16px;">👁 <span id="visit-count">—</span> visits</span>
-  © 2026 Raphael Anaadumba · University of Massachusetts Lowell · Last updated May 2026
+  © 2026 Raphael Anaadumba · University of Massachusetts Lowell · Last updated September 2026
 </footer>
 
 <script>
-  function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    document.getElementById('page-' + id).classList.add('active');
-    const navEl = document.getElementById('nav-' + id);
-    if (navEl) navEl.classList.add('active');
+  // Hash-based pages, so links like raphaelana.github.io/#publications work
+  const PAGES = ["about", "publications"];
+  function showPage() {
+    const id = PAGES.includes(location.hash.slice(1)) ? location.hash.slice(1) : "about";
+    document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === "page-" + id));
+    document.querySelectorAll(".nav-links a[data-page]").forEach(a => a.classList.toggle("active", a.dataset.page === id));
     window.scrollTo(0, 0);
-    return false;
   }
+  window.addEventListener("hashchange", showPage);
+  showPage();
 
-  function toggleBib(id) {
-    document.getElementById(id).classList.toggle('open');
-  }
+  // Older news
+  const news = document.getElementById("news");
+  const newsBtn = document.getElementById("news-toggle");
+  newsBtn.addEventListener("click", () => {
+    const open = news.classList.toggle("expanded");
+    newsBtn.textContent = open ? "Show less" : "Show older news";
+    newsBtn.setAttribute("aria-expanded", open);
+  });
 
-  function filterPubs(tag, btn) {
-    document.querySelectorAll('.pub-filter').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.pub-entry').forEach(e => {
-      e.style.display = (tag === 'all' || (e.dataset.tags || '').includes(tag)) ? '' : 'none';
+  // Cite toggles + copy
+  document.querySelectorAll("[data-bib]").forEach(btn => {
+    btn.setAttribute("aria-expanded", "false");
+    btn.addEventListener("click", () => {
+      const open = document.getElementById(btn.dataset.bib).classList.toggle("open");
+      btn.setAttribute("aria-expanded", open);
     });
-    document.querySelectorAll('.pub-year').forEach(y => {
-      let next = y.nextElementSibling, visible = false;
-      while (next && !next.classList.contains('pub-year')) {
-        if (next.classList.contains('pub-entry') && next.style.display !== 'none') visible = true;
-        next = next.nextElementSibling;
-      }
-      y.style.display = visible ? '' : 'none';
+  });
+  document.querySelectorAll(".bibtex .copy").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const text = btn.nextElementSibling.textContent;
+      try { await navigator.clipboard.writeText(text); btn.textContent = "Copied"; }
+      catch { btn.textContent = "Select & copy"; }
+      setTimeout(() => (btn.textContent = "Copy"), 1500);
     });
-  }
-
-  // Visit counter
-  fetch('https://api.countapi.xyz/hit/raphaelana.github.io/visits')
-    .then(r => r.json())
-    .then(data => {
-      if (data.value) document.getElementById('visit-count').textContent = data.value.toLocaleString();
-    })
-    .catch(() => {});
+  });
 </script>
 </body>
 </html>
