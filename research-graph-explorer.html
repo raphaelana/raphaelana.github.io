@@ -401,7 +401,7 @@ window.sendMessage=async function(){
   const context=hits.map((h,i)=>`[Passage ${i+1} — ${h.paper.title} (${h.paper.venue}, ${h.paper.year})]:\n${h.text}`).join('\n\n');
   const system=`You are a research assistant for Raphael Anaadumba, a PhD candidate at UMass Lowell studying GNNs for public health and clinical audio. Answer using ONLY the retrieved passages provided. Be concise (3-5 sentences). Cite by venue e.g. "In the AAAI 2026 paper...". If the answer is not in the passages, say so.`;
   try{
-    const res=await fetch('/api/chat',{
+    const res=await fetch('https://raphaelana-github-io.vercel.app/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'openai/gpt-oss-20b',max_tokens:400,
