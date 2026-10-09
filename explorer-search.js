@@ -91,6 +91,15 @@ function localAnswer(plan) {
     const source = CHUNKS.find(h => h.paperId === p.id && h.chunkIdx === p.datasetChunk);
     return { text: p.datasetDescription, sources: [source] };
   });
+  if (plan.intent === "overview" && papers.length === 1) {
+    const paper = papers[0];
+    return [
+      { text: `“${paper.title}” was published in ${paper.venue}${paper.venue.includes(String(paper.year)) ? "" : ` (${paper.year})`}.`, sources: [metadataPassage(paper)] },
+      ...CHUNKS.filter(h => h.paperId === paper.id).map(source => ({
+        text: source.text.replace(/^Datasets?(?: and (?:evaluation|method))?:\s*/, ''), sources: [source]
+      }))
+    ];
+  }
   return null;
 }
 function parseGroundedAnswer(content, hits) {

@@ -23,6 +23,8 @@ test('reported follow-ups keep the self-supervised paper and its metadata', () =
   assert.doesNotMatch(result[1].answer[0].text, /ICASSP/);
   assert.equal(result[2].answer[0].text, 'The paper is titled “Self-Supervised Graph Attention Networks for Community-Engaged Lead Contamination Risk Assessment”.');
   assert.ok(result[3].hits.length > 0);
+  assert.equal(result[3].answer.length,3);
+  assert.match(result[3].answer[1].text,/The Scientific Reports study/);
 });
 
 test('ambiguous singular follow-ups ask for a paper rather than picking one', () => {
@@ -76,10 +78,10 @@ test('citations refer only to supplied passages and cannot be silently invented'
 });
 
 test('API sends scoped evidence and history with a citation-constrained schema', async () => {
-  let requestBody;
+  const requestBodies=[];
   let answer = {status:'answered',blocks:[{text:'The study uses graph attention.',citations:['ssgat:0']}]};
   const apiContext = vm.createContext({Response,Request,process:{env:{GROQ_API_KEY:'test-key'}},fetch:async(url,options)=>{
-    requestBody=JSON.parse(options.body);
+    requestBodies.push(JSON.parse(options.body));
     return Response.json({choices:[{message:{content:JSON.stringify(answer)}}]});
   }});
   const source = fs.readFileSync(path.join(root,'api/chat.js'),'utf8').replace('export const config','const config').replace('export default async function handler','async function handler');
@@ -88,9 +90,13 @@ test('API sends scoped evidence and history with a citation-constrained schema',
   apiContext.req=new Request('https://example.test/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   const response=await vm.runInContext('handler(req)',apiContext);
   assert.equal(response.status,200);
+  assert.equal(requestBodies.length,2);
+  const requestBody=requestBodies[0];
   assert.equal(requestBody.response_format.json_schema.strict,true);
   assert.deepEqual(requestBody.response_format.json_schema.schema.properties.blocks.items.properties.citations.items.enum,['ssgat:0']);
   assert.match(requestBody.messages[1].content,/Previously discussed SSGAT/);
+  assert.match(requestBody.messages[0].content,/complete, grammatical sentences/);
+  assert.match(requestBodies[1].messages[0].content,/Check every factual clause/);
   answer={status:'answered',blocks:[{text:'Wrong source.',citations:['icassp2026:2']}]};
   apiContext.req=new Request('https://example.test/api/chat',{method:'POST',body:JSON.stringify(payload)});
   assert.equal((await vm.runInContext('handler(req)',apiContext)).status,502);

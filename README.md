@@ -38,7 +38,8 @@ generated from shared methods and tasks, not learned or causal relationships.
 Paper browsing and scoped keyword search run locally, without an embedding download.
 Selecting a paper sets the conversation context. Singular follow-ups stay with
 that paper; ambiguous references offer paper choices instead of guessing.
-Titles, venues and dataset descriptions are read directly from the paper records.
+Titles, venues, dataset descriptions and single-paper overviews are read directly
+from the paper records and summaries, using complete sentences and paragraphs.
 Cross-paper comparisons retrieve balanced evidence, expanding through documented
 shared methods/tasks when related work is requested.
 The optional answer service is hosted separately on Vercel; `api/chat.js`
@@ -47,7 +48,8 @@ server environment. If the answer service fails or exceeds 12 seconds, the
 explorer displays the retrieved summaries and links to the papers. The endpoint
 accepts scoped passages and recent conversation context, and returns structured
 paragraphs with supporting passage IDs. Both server and client reject missing or
-unknown citations. This validates source identity, not whether a citation entails
+unknown citations. Generated explanations receive a second evidence-review pass
+through the same Groq service before display. This validates source identity, not whether a citation entails
 every claim; the original paper remains the authority. Source disclosures show
 the exact indexed excerpt and the original-study link. The corpus contains
 curated summaries, not full-text paper retrieval.
