@@ -16,8 +16,8 @@ const PAPERS = [
       "lead risk"
     ],
     "chunks": [
-      "The AAAI/IAAI 2026 study combines spatial Graph Attention Networks with XGBoost for neighborhood-scale lead-contamination risk prediction. The graph models relationships between census block groups; tabular features include housing and sociodemographic records.",
-      "Dataset: The Chicago study uses more than 38,000 water tests covering 739 census block groups. Reported results include 84.8% balanced accuracy, 91.6% recall and 44% fewer false positives than spatial-only baselines. These are study results, not evidence of nationwide deployment."
+      "The AAAI/IAAI study models Chicago census block groups with a directed spatial Graph Attention Network and combines graph representations with XGBoost. It integrates housing and sociodemographic features with relational information from nearby geographic units. Comparisons with spatial-only baselines examine what the hybrid representation contributes.",
+      "Datasets: Chicago water-testing records, American Community Survey variables, and Census records are linked at census-block-group level. Water-test concentrations supply the prediction labels; public housing and demographic records provide explanatory features."
     ],
     "status": "Published"
   },
@@ -38,9 +38,9 @@ const PAPERS = [
       "temporal edges"
     ],
     "chunks": [
-      "The ICASSP 2026 study connects Audio Spectrogram Transformer embeddings of overlapping 10-second speech windows, with a 5-second hop, using temporal-adjacency and acoustic-similarity edges. A graph attention network learns relational representations. The graph component adds approximately 0.47 million parameters, about 0.5% of the AST backbone.",
-      "Datasets: Pitt Corpus and TAUKADIAL were trained and evaluated separately using speaker-disjoint, stratified 10-fold cross-validation. Full-graph accuracy was 80.5% on Pitt and 81.8% on TAUKADIAL. This evaluation is within each cohort; it does not establish external clinical validation.",
-      "The TAUKADIAL mild cognitive impairment ablation compares AST-only, temporal-only and full graphs. Accuracy was 51.3%, 80.5% and 81.8%, respectively; AUROC was 0.474, 0.645 and 0.728. Temporal adjacency accounted for most of the accuracy improvement, while similarity edges added less to accuracy and improved ranking."
+      "The ICASSP study represents overlapping speech windows with Audio Spectrogram Transformers. Windows are connected by temporal adjacency and acoustic-similarity edges, and a graph attention network aggregates their representations. The experimental question is which relationships contribute beyond pooled window features.",
+      "Datasets and evaluation: Pitt Corpus and TAUKADIAL are trained and evaluated separately using speaker-disjoint, stratified cross-validation. Repeated recordings from a speaker remain in the same evaluation partition.",
+      "Edge-type ablations compare pooled AST representations, temporal-only graphs, and graphs with both temporal and acoustic-similarity edges. Temporal adjacency was the main contributor to mild cognitive impairment classification; similarity edges affected ranking more than class decisions. The finding makes graph construction an explicit modeling choice."
     ],
     "status": "Published"
   },
@@ -60,8 +60,8 @@ const PAPERS = [
       "ICBHI"
     ],
     "chunks": [
-      "The CHASE 2025 respiratory study uses attention-based CNN–GCN models for disease classification from STFT representations of lung sounds. Convolutional features are reduced with PCA and connected using cosine-similarity relationships for graph modeling.",
-      "The ICBHI dataset contains 1,021 recordings from 126 patients, with expert annotations for crackles and wheezes. The paper reports disease classification; it does not report separate crackle or wheeze event-localization performance. The reported six-way classification accuracy increases from 90% to 93% with attention."
+      "The CHASE respiratory study uses STFT representations of lung sounds, convolutional feature extraction, PCA, and cosine-similarity graph construction. Graph convolution aggregates the learned features, with an attention comparison to examine the contribution of weighting signal features for disease classification.",
+      "Dataset: ICBHI respiratory sound recordings contain expert annotations for crackles and wheezes and cover multiple clinical conditions and acquisition settings. The study predicts respiratory disease classes from the recordings."
     ],
     "status": "Published"
   },
@@ -81,8 +81,8 @@ const PAPERS = [
       "water tests"
     ],
     "chunks": [
-      "Dataset: The Frontiers 2025 study links housing, parcel and historical water-testing data for 916 Flint homes, drawn from approximately 14,000 water-test records. Houses are graph nodes connected through spatial proximity; graph attention aggregates neighboring housing features.",
-      "The study reports AUROC of 0.93 and recall of approximately 0.93, compared with recall of 0.67 for XGBoost. Historical water tests supply labels. Risk prediction may help prioritize testing; it does not replace water sampling or establish performance in every city."
+      "Dataset: The Frontiers study links Flint historical water-testing records with housing and parcel data. Houses become graph nodes, with edges defined through spatial proximity. Historical lead measurements supply labels for prediction from housing characteristics.",
+      "Graph attention aggregates neighboring property features. The study examines spatial connection thresholds and compares relational prediction with tabular models, making geographic graph construction part of the methodological question."
     ],
     "status": "Published"
   },
@@ -102,8 +102,8 @@ const PAPERS = [
       "labels"
     ],
     "chunks": [
-      "Dataset and method: Published in Scientific Reports in 2026, this study uses self-supervised Graph Attention Networks for community-engaged lead-contamination risk assessment from housing and historical water-testing data. It connects to the dissertation question of how label availability changes the value of relational learning.",
-      "Reported performance includes 90% accuracy and AUROC of 0.836. The work investigates self-supervised pretraining for risk assessment. For the complete experimental settings and transfer results, consult the linked paper."
+      "Dataset and method: The Scientific Reports study uses housing and historical water-testing records for self-supervised graph attention. Pretraining learns representations before supervised lead-risk prediction. The work connects to the question of how relational structure can make use of records with limited labels.",
+      "Self-supervised pretraining and supervised risk prediction play distinct roles: the former learns from available record structure and features, while the latter uses contamination labels. The linked paper documents the complete training and evaluation settings."
     ],
     "status": "Published"
   }
@@ -186,12 +186,12 @@ function initGraph(){
     .attr('font-family','Space Grotesk,sans-serif')
     .attr('font-size',isMobile?'9px':'11px').attr('font-weight','600')
     .attr('fill',d=>d.color).attr('pointer-events','none')
-    .text(d=>d.venue.split(' ')[0].toUpperCase().substring(0,6));
+    .text(d=>({aaai2026:'AAAI',icassp2026:'AST',chase:'GCN',frontiers:'GAT',ssgat:'SSGAT'})[d.id]);
 
   node.append('text')
     .attr('text-anchor','middle').attr('dy',(R+13)+'px')
     .attr('font-size',isMobile?'9px':'10px').attr('fill','rgba(168,180,204,0.7)').attr('pointer-events','none')
-    .text(d=>d.venue);
+    .text(d=>({aaai2026:'AAAI / IAAI',icassp2026:'ICASSP',chase:'CHASE',frontiers:'Frontiers',ssgat:'Sci. Reports'})[d.id]);
 
   const padX=R+14, padTop=topBar+R+24, padBottom=R+26;
   sim.on('tick',()=>{

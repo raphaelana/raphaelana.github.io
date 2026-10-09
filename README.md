@@ -15,7 +15,7 @@ No build step is required.
 
 ## Update the site
 
-- `index.html`: profile, research case studies, publications, résumé summary.
+- `index.html`: profile, research case studies, publications, direct CV links.
 - `site.css`: layout, typography, mobile styles.
 - `site.js`: hash navigation, older news, citation toggles and copying.
 - `research-graph-explorer.html`: explorer layout.
@@ -42,8 +42,8 @@ explorer displays the retrieved summaries and links to the papers.
 
 ## Before publishing
 
-- Open each page from its direct hash URL, including `/#research` and `/#resume`.
-- Test both résumé controls, citations, copying, and older news.
+- Open each page from its direct hash URL, including `/#research` and `/#publications`.
+- Test the header and sidebar CV links, citations, copying, and older news.
 - Test the explorer’s paper buttons, suggestions, search, Clear, and back link.
 - Confirm search still shows source passages when the answer service is offline.
 - Check a narrow viewport and keyboard navigation.

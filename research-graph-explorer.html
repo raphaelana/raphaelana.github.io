@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="vendor/d3.min.js" defer></script>
-<script src="explorer-search.js?v=20261009b" defer></script>
-<script src="explorer.js?v=20261009b" defer></script>
+<script src="explorer-search.js?v=20261009c" defer></script>
+<script src="explorer.js?v=20261009c" defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -134,6 +134,14 @@ a{color:var(--teal);text-decoration:none}a:hover{text-decoration:underline}
  #suggestions{max-height:18dvh;overflow-y:auto}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+html{font-size:16px}
+body,body *{font-size:1rem!important}
+#paper-list{bottom:24px;overflow-y:auto}
+.paper-button span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#graph-hint{max-width:45%;text-align:center}
+@media(max-width:1050px){#header-right .legend-item{display:none}}
+@media(max-width:780px){#paper-list{bottom:auto}.paper-button span{display:none}}
 </style>
 <meta name="description" content="Explore Raphael Anaadumba’s published research in graph learning, clinical audio, and environmental health."/>
 </head>

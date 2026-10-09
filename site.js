@@ -1,7 +1,7 @@
 "use strict";
 
 document.documentElement.classList.add("js");
-const pages = ["about", "research", "publications", "resume"];
+const pages = ["about", "research", "publications"];
 function showPage() {
   if (location.hash === "#main-content") {
     document.getElementById("main-content").focus();
