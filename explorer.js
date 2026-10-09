@@ -17,7 +17,7 @@ const PAPERS = [
     ],
     "chunks": [
       "The AAAI/IAAI 2026 study combines spatial Graph Attention Networks with XGBoost for neighborhood-scale lead-contamination risk prediction. The graph models relationships between census block groups; tabular features include housing and sociodemographic records.",
-      "The Chicago study uses more than 38,000 water tests covering 739 census block groups. Reported results include 84.8% balanced accuracy, 91.6% recall and 44% fewer false positives than spatial-only baselines. These are study results, not evidence of nationwide deployment."
+      "Dataset: The Chicago study uses more than 38,000 water tests covering 739 census block groups. Reported results include 84.8% balanced accuracy, 91.6% recall and 44% fewer false positives than spatial-only baselines. These are study results, not evidence of nationwide deployment."
     ],
     "status": "Published"
   },
@@ -39,7 +39,7 @@ const PAPERS = [
     ],
     "chunks": [
       "The ICASSP 2026 study connects Audio Spectrogram Transformer embeddings of overlapping 10-second speech windows, with a 5-second hop, using temporal-adjacency and acoustic-similarity edges. A graph attention network learns relational representations. The graph component adds approximately 0.47 million parameters, about 0.5% of the AST backbone.",
-      "Pitt Corpus and TAUKADIAL were trained and evaluated separately using speaker-disjoint, stratified 10-fold cross-validation. Full-graph accuracy was 80.5% on Pitt and 81.8% on TAUKADIAL. This evaluation is within each cohort; it does not establish external clinical validation.",
+      "Datasets: Pitt Corpus and TAUKADIAL were trained and evaluated separately using speaker-disjoint, stratified 10-fold cross-validation. Full-graph accuracy was 80.5% on Pitt and 81.8% on TAUKADIAL. This evaluation is within each cohort; it does not establish external clinical validation.",
       "The TAUKADIAL mild cognitive impairment ablation compares AST-only, temporal-only and full graphs. Accuracy was 51.3%, 80.5% and 81.8%, respectively; AUROC was 0.474, 0.645 and 0.728. Temporal adjacency accounted for most of the accuracy improvement, while similarity edges added less to accuracy and improved ranking."
     ],
     "status": "Published"
@@ -81,7 +81,7 @@ const PAPERS = [
       "water tests"
     ],
     "chunks": [
-      "The Frontiers 2025 study links housing, parcel and historical water-testing data for 916 Flint homes, drawn from approximately 14,000 water-test records. Houses are graph nodes connected through spatial proximity; graph attention aggregates neighboring housing features.",
+      "Dataset: The Frontiers 2025 study links housing, parcel and historical water-testing data for 916 Flint homes, drawn from approximately 14,000 water-test records. Houses are graph nodes connected through spatial proximity; graph attention aggregates neighboring housing features.",
       "The study reports AUROC of 0.93 and recall of approximately 0.93, compared with recall of 0.67 for XGBoost. Historical water tests supply labels. Risk prediction may help prioritize testing; it does not replace water sampling or establish performance in every city."
     ],
     "status": "Published"
@@ -102,7 +102,7 @@ const PAPERS = [
       "labels"
     ],
     "chunks": [
-      "Published in Scientific Reports in 2026, this study uses self-supervised Graph Attention Networks for community-engaged lead-contamination risk assessment from housing and historical water-testing data. It connects to the dissertation question of how label availability changes the value of relational learning.",
+      "Dataset and method: Published in Scientific Reports in 2026, this study uses self-supervised Graph Attention Networks for community-engaged lead-contamination risk assessment from housing and historical water-testing data. It connects to the dissertation question of how label availability changes the value of relational learning.",
       "Reported performance includes 90% accuracy and AUROC of 0.836. The work investigates self-supervised pretraining for risk assessment. For the complete experimental settings and transfer results, consult the linked paper."
     ],
     "status": "Published"
@@ -245,10 +245,14 @@ function showPaper(p) {
   });
   document.getElementById('drawer-link').href = p.url;
   document.querySelectorAll('.paper-button').forEach(button => button.setAttribute('aria-expanded', String(button.dataset.paper === p.id)));
+  drawer.hidden = false;
   drawer.classList.add('visible');
 }
 function closeDrawer() {
-  document.getElementById('paper-drawer').classList.remove('visible');
+  const drawer = document.getElementById('paper-drawer');
+  if (drawer.contains(document.activeElement)) document.querySelector('.paper-button[aria-expanded="true"]')?.focus();
+  drawer.classList.remove('visible');
+  drawer.hidden = true;
   document.querySelectorAll('.paper-button').forEach(button => button.setAttribute('aria-expanded', 'false'));
 }
 function addMsg(role, content, hits = []) {

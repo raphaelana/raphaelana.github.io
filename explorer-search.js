@@ -9,6 +9,8 @@ function searchTokens(text) {
 }
 function retrieve(query, k = 4) {
   const tokens = [...new Set(searchTokens(query))];
+  const datasetQuery = tokens.includes("dataset");
+  if (datasetQuery) k = PAPERS.length;
   const scored = CHUNKS.map(chunk => {
     const body = searchTokens(chunk.text);
     const tags = searchTokens(chunk.paper.title + " " + chunk.paper.keywords.join(" "));
@@ -19,6 +21,6 @@ function retrieve(query, k = 4) {
   return scored.filter(chunk => {
     const count = counts.get(chunk.paperId) || 0;
     counts.set(chunk.paperId, count + 1);
-    return count < 2;
+    return count < (datasetQuery ? 1 : 2);
   }).slice(0, k);
 }
