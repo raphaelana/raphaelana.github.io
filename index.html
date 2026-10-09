@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Raphael Anaadumba · Graph ML for Public Health</title>
-  <meta name="description" content="Raphael Anaadumba, PhD candidate in Computer Science at UMass Lowell. Graph neural networks for environmental health and clinical audio. NeurIPS 2026 reviewer."/>
+  <title>Raphael Anaadumba · Graph Learning for Health</title>
+  <meta name="description" content="Raphael Anaadumba, Computer Science PhD candidate at UMass Lowell. Relational learning for clinical audio and environmental health. Expected May 2027; seeking summer 2027 research roles."/>
 
   <!-- Link previews (LinkedIn, Slack, email) -->
   <meta property="og:type" content="website"/>
-  <meta property="og:title" content="Raphael Anaadumba · Graph ML for Public Health"/>
-  <meta property="og:description" content="PhD candidate at UMass Lowell building graph neural networks for lead-contamination risk and speech-based health screening."/>
+  <meta property="og:title" content="Raphael Anaadumba · Graph Learning for Health"/>
+  <meta property="og:description" content="When do relationships between observations improve prediction? Research in clinical audio and environmental health. PhD completion expected May 2027."/>
   <meta property="og:image" content="https://raphaelana.github.io/photo.jpg"/>
   <meta property="og:url" content="https://raphaelana.github.io/"/>
 
@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <!-- New stylesheet. The old style.css is left untouched so research-graph-explorer.html keeps working. -->
+  <!-- Shared profile styles -->
   <link rel="stylesheet" href="site.css"/>
 
   <!-- Helps Google show a proper profile card for searches of your name -->
@@ -40,21 +40,25 @@
 </head>
 <body>
 
+<a class="skip-link" href="#main-content">Skip to content</a>
+
 <nav class="nav">
   <div class="nav-inner">
     <a class="nav-brand" href="#about">Raphael Anaadumba</a>
     <div class="nav-links">
       <a href="#about" data-page="about">About</a>
+      <a href="#research" data-page="research">Research</a>
       <a href="#publications" data-page="publications">Publications</a>
-      <a href="Raphael_Anaadumba_Resume.pdf" target="_blank" rel="noopener">CV</a>
-      <a href="/research-graph-explorer.html">Research Graph</a>
+      <a href="#resume" data-page="resume">Résumé</a>
+      <a href="research-graph-explorer.html">Explorer</a>
     </div>
   </div>
 </nav>
 
 <!-- ═════════════════════ ABOUT ═════════════════════ -->
-<main>
-<section class="page" id="page-about">
+<main id="main-content" tabindex="-1">
+<section class="page active" id="page-about" aria-label="About Raphael">
+  <span id="about"></span>
   <div class="container">
     <div class="about-grid">
 
@@ -72,31 +76,34 @@
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>GitHub</a></li>
           <li><a href="https://www.linkedin.com/in/anaadumba-raphael-baa61812a" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn</a></li>
-          <li><a href="Raphael_Anaadumba_CV.pdf" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>CV (PDF)</a></li>
+          <li><a href="Raphael_Anaadumba_Resume.pdf" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>Résumé (PDF)</a></li>
         </ul>
       </aside>
 
       <!-- Main column -->
       <div>
-        <p class="lead">I develop graph-based machine learning methods for environmental and health-related challenges.</p>
+        <p class="eyebrow">Relational learning · Clinical audio · Environmental health</p>
+        <h1>When do relationships improve health-risk prediction?</h1>
+        <p class="lead">I build graph-based models and test what they add beyond the underlying features.</p>
 
         <div class="bio">
-          <p>I am a PhD candidate in Computer Science at <a href="https://www.uml.edu/sciences/computer-science/" target="_blank" rel="noopener">UMass Lowell</a>, advised by Prof. <a href="https://www.uml.edu/sciences/computer-science/people/alam-mohammad-arif-ul.aspx" target="_blank" rel="noopener">Mohammad Arif Ul Alam</a> in the CUBICS Lab and supported by NSF Award #2230180. My work predicts lead contamination in drinking water from public housing, Census, and EPA data, and detects dementia and respiratory disease from everyday audio.</p>
+          <p>I am a PhD candidate in Computer Science at <a href="https://www.uml.edu/sciences/computer-science/" target="_blank" rel="noopener">UMass Lowell</a>, advised by Prof. <a href="https://www.uml.edu/sciences/computer-science/people/alam-mohammad-arif-ul.aspx" target="_blank" rel="noopener">Mohammad Arif Ul Alam</a> in the CUBICS Lab and supported by NSF Award #2230180. I study disease classification from speech and respiratory sounds, and lead-contamination risk from housing, Census, and water-testing records.</p>
           <p>The lead-risk work spans Chicago, Flint, and Massachusetts, and I have presented it to the U.S. EPA and the Merrimack River Watershed Council. Before my PhD I worked as a software engineer building backend services and REST APIs.</p>
         </div>
 
         <div class="stats">
           <div class="stat"><b>5</b> first-author papers</div>
           <div class="stat"><b>NeurIPS 2026</b> reviewer</div>
-          <div class="stat"><b>$2.5M</b> NSF-funded project</div>
+          <div class="stat"><b>May 2027</b> expected PhD completion</div>
         </div>
 
         <div class="callout">
-          <p><strong>Open to research and applied ML internships and full-time roles</strong>, and to collaborations on graph learning, spatial ML, and health AI.</p>
+          <p><strong>Seeking applied research roles and postdoctoral opportunities for summer 2027.</strong> Interested in clinical signal modeling, graph learning, and reliable health AI.</p>
           <div class="actions">
-            <a href="Raphael_Anaadumba_Resume.pdf" target="_blank" rel="noopener">View CV →</a>
-            <a href="mailto:raphael_anaadumba@student.uml.edu">Email me →</a>
+            <a href="#research">Research findings →</a>
+            <a href="Raphael_Anaadumba_Resume.pdf" target="_blank" rel="noopener">Résumé PDF ↗</a>
+            <a href="mailto:raphael_anaadumba@student.uml.edu?subject=Research%20opportunity">Get in touch →</a>
           </div>
         </div>
 
@@ -104,7 +111,7 @@
         <ul class="focus">
           <li><b>Environmental health AI</b><span>Spatial graph attention networks that estimate lead-contamination risk from public housing, demographic, and infrastructure data, so cities can target testing where physical sampling is limited.</span></li>
           <li><b>Clinical audio</b><span>Graph-based models over speech and lung sounds for non-invasive screening: dementia detection from conversational speech (AST + GAT) and respiratory disease classification (GCN).</span></li>
-          <li><b>Current work: learning with few labels</b><span>Self-supervised pretraining, graph-conditioned diffusion models that generate synthetic training records, and transfer across cities.</span></li>
+          <li><b>Current work: learning with few labels</b><span>Studying how graph topology and label availability affect predictive value; developing graph-conditioned diffusion to evaluate synthetic data under limited labels.</span></li>
         </ul>
       </div>
     </div>
@@ -124,7 +131,7 @@
       <li class="news-more"><time>Mar 2024</time><div>Springer Nature reviewer certificate, <em>The Journal of Supercomputing</em>.</div></li>
       <li class="news-more"><time>Jan 2023</time><div>Joined the CUBICS Lab at UMass Lowell as a PhD student.</div></li>
     </ul>
-    <button class="link-btn" id="news-toggle" aria-expanded="false">Show older news</button>
+    <button class="link-btn" id="news-toggle" aria-expanded="false" aria-controls="news">Show older news</button>
 
     <!-- Service & awards -->
     <h2 class="section-title">Service, Teaching &amp; Awards</h2>
@@ -133,7 +140,6 @@
         <h3>Peer review</h3>
         <ul>
           <li><strong>NeurIPS 2026</strong><small>Evaluations &amp; Datasets Track</small></li>
-          <!-- If your Nature review was for a different Nature-branded journal, name it here. -->
           <li><strong>Scientific Reports</strong><small>Nature Portfolio · certified reviewer</small></li>
           <li><strong>The Journal of Supercomputing</strong><small>Springer Nature · certified reviewer</small></li>
           <li><strong>Discover Sustainability</strong><small>Springer Nature · certified reviewer</small></li>
@@ -155,8 +161,89 @@
   </div>
 </section>
 
+<section class="page" id="page-research">
+  <span id="research"></span>
+  <div class="container research-container">
+    <p class="eyebrow">Questions, comparisons, findings</p>
+    <h1>What does the graph actually add?</h1>
+    <p class="page-intro">My work tests the contribution of relational structure in clinical signals and environmental-health records. These examples show the comparisons behind the results.</p>
+
+    <article class="research-study">
+      <div class="study-meta">01 · Clinical audio · First author, ICASSP 2026</div>
+      <h2>Which relationships help detect cognitive impairment from speech?</h2>
+      <p>I connected Audio Spectrogram Transformer embeddings of overlapping 10-second speech windows using temporal adjacency and acoustic similarity. The ablation asks whether each edge type improves prediction beyond pooled window representations.</p>
+      <div class="table-wrap">
+        <table class="result-table">
+          <caption>TAUKADIAL: mild cognitive impairment classification</caption>
+          <thead><tr><th scope="col">Representation</th><th scope="col">Accuracy</th><th scope="col">AUROC</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">AST only</th><td>51.3%</td><td>0.474</td></tr>
+            <tr><th scope="row">AST + temporal edges</th><td>80.5%</td><td>0.645</td></tr>
+            <tr><th scope="row">AST + temporal + similarity edges</th><td>81.8%</td><td>0.728</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="study-finding"><strong>Finding:</strong> Temporal adjacency accounted for most of the accuracy gain. Similarity edges added less to accuracy while improving ranking, as measured by AUROC.</p>
+      <p class="study-note">Speaker-disjoint, stratified 10-fold cross-validation. Models were trained and evaluated separately on Pitt and TAUKADIAL; this is within-cohort evaluation. The graph component adds approximately 0.47 million parameters, about 0.5% of the AST backbone.</p>
+      <div class="actions"><a href="https://doi.org/10.1109/ICASSP55912.2026.11464316" target="_blank" rel="noopener">Read the paper ↗</a><a href="#publications">Publication details →</a></div>
+    </article>
+
+    <article class="research-study">
+      <div class="study-meta">02 · Physiological acoustics · First author, ACM/IEEE CHASE 2025</div>
+      <h2>Graph modeling beyond speech</h2>
+      <p>I developed attention-based CNN–GCN models for respiratory disease classification from STFT representations of lung sounds. The ICBHI dataset contains 1,021 recordings from 126 patients, with expert annotations for crackles and wheezes.</p>
+      <p class="study-finding"><strong>Contribution:</strong> Combining convolutional signal features with graph-based aggregation extends my clinical-audio work to respiratory acoustics.</p>
+      <p class="study-note">The prediction task is disease classification. Crackle and wheeze annotations describe the recordings; the study does not report separate event-localization performance.</p>
+      <div class="actions"><a href="https://doi.org/10.1145/3721201.3721402" target="_blank" rel="noopener">Read the paper ↗</a></div>
+    </article>
+
+    <article class="research-study">
+      <div class="study-meta">03 · Environmental health · Ongoing research</div>
+      <h2>When pooled performance conceals a site shortcut</h2>
+      <p>In Massachusetts lead-risk modeling, a pooled AUROC of 0.78 concealed AUROCs of 0.34–0.62 within individual cities. I traced the discrepancy to features encoding city identity, including a covariate whose association reversed between pooled and city-level analysis.</p>
+      <p class="study-finding"><strong>Response:</strong> I rebuilt evaluation per city so that aggregate performance could be assessed alongside performance within each site.</p>
+      <p class="study-note">An ongoing analysis, reported in my résumé. These results do not establish transfer to unseen cities.</p>
+      <div class="actions"><a href="Raphael_Anaadumba_Resume.pdf" target="_blank" rel="noopener">Research experience in my résumé ↗</a></div>
+    </article>
+
+    <article class="research-study">
+      <div class="study-meta">04 · Dissertation · Work in progress</div>
+      <h2>How does the value of graph structure change when labels are scarce?</h2>
+      <p>I study how graph topology and label availability affect relational learning in population-scale risk prediction. Alongside self-supervised pretraining, I am developing graph-conditioned latent diffusion and evaluating whether synthetic records reduce the number of real labeled examples needed for prediction.</p>
+      <p class="study-note">The generation work is under development. The published self-supervised study provides a starting point for this question.</p>
+      <div class="actions"><a href="https://doi.org/10.1038/s41598-026-52965-y" target="_blank" rel="noopener">Self-supervised graph study ↗</a><a href="research-graph-explorer.html">Explore the papers →</a></div>
+    </article>
+    <div class="callout"><p><strong>Research opportunities from summer 2027.</strong> I am interested in bringing these questions to clinical signal modeling and applied health research.</p><div class="actions"><a href="mailto:raphael_anaadumba@student.uml.edu?subject=Research%20opportunity">Discuss a research opportunity →</a></div></div>
+  </div>
+</section>
+
+<section class="page" id="page-resume">
+  <span id="resume"></span>
+  <div class="container resume-container">
+    <p class="eyebrow">Experience &amp; training</p>
+    <h1>Résumé</h1>
+    <p class="page-intro">Computer Science PhD candidate at UMass Lowell. Expected completion May 2027; seeking applied research and postdoctoral opportunities from summer 2027.</p>
+    <div class="resume-downloads"><a class="primary-link" href="Raphael_Anaadumba_Resume.pdf" target="_blank" rel="noopener">Open résumé PDF ↗</a><a href="Raphael_Anaadumba_Resume.pdf" download>Download PDF ↓</a></div>
+
+    <h2 class="section-title">Research &amp; engineering experience</h2>
+    <article class="resume-entry"><div class="entry-heading"><h3>Graduate Research Assistant · CUBICS Lab</h3><span>2023–present</span></div><p class="entry-org">University of Massachusetts Lowell · Advisor: Mohammad Arif Ul Alam</p><ul><li>Graph learning for lead-contamination risk across Chicago, Flint, and Massachusetts, in an NSF-funded project.</li><li>First-author clinical-audio research at ICASSP 2026 and ACM/IEEE CHASE 2025; environmental-health publications at AAAI/IAAI, Scientific Reports, and Frontiers in Environmental Engineering.</li><li>Data ingestion, record linkage, spatial graph construction, model ablations, and site-specific evaluation.</li></ul></article>
+    <article class="resume-entry"><div class="entry-heading"><h3>Backend Software Engineer</h3><span>2021–2022</span></div><p class="entry-org">Shenzhen Roynard Service Consulting</p><p>Built Node.js REST services, authentication and role-based access, business automation, and asynchronous data-ingestion workflows.</p></article>
+    <article class="resume-entry"><div class="entry-heading"><h3>Teaching Assistant · Computer Architecture</h3><span>Fall 2026</span></div><p class="entry-org">COMP 3050 · University of Massachusetts Lowell</p><p>Supported assignment setup and submissions for a course with more than 40 students.</p></article>
+
+    <h2 class="section-title">Education</h2>
+    <article class="resume-entry"><div class="entry-heading"><h3>PhD, Computer Science</h3><span>Expected May 2027</span></div><p>University of Massachusetts Lowell</p></article>
+    <article class="resume-entry"><div class="entry-heading"><h3>MS, Computer Science (Machine Learning)</h3><span>2020</span></div><p>Nanjing University of Information Science and Technology</p></article>
+    <article class="resume-entry"><div class="entry-heading"><h3>BS, Computer Science</h3><span>2016</span></div><p>University for Development Studies · Tamale, Ghana</p></article>
+
+    <h2 class="section-title">Tools I use</h2>
+    <dl class="skills-list"><dt>Modeling</dt><dd>Python, PyTorch, PyTorch Geometric, scikit-learn, XGBoost, Hugging Face</dd><dt>Data &amp; spatial analysis</dt><dd>SQL, pandas, NumPy, NetworkX, GeoPandas, QGIS</dd><dt>Engineering</dt><dd>JavaScript, Node.js, REST APIs, Git, Linux, Docker</dd></dl>
+    <div class="actions"><a href="#publications">Publications →</a><a href="mailto:raphael_anaadumba@student.uml.edu">Email me →</a></div>
+  </div>
+</section>
+
 <!-- ═════════════════════ PUBLICATIONS ═════════════════════ -->
 <section class="page" id="page-publications">
+  <span id="publications"></span>
   <div class="container">
     <h2 class="section-title" style="margin-top:0">Publications</h2>
     <p class="pubs-intro">Peer-reviewed, first-authored papers. Full list on <a href="https://scholar.google.com/citations?user=HfziYKYAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a></p>
@@ -168,10 +255,9 @@
       <div><span class="venue-badge">Sci. Reports<small>Nature Portfolio</small></span></div>
       <div>
         <div class="pub-title"><a href="https://doi.org/10.1038/s41598-026-52965-y" target="_blank" rel="noopener">Self-Supervised Graph Attention Networks for Community-Engaged Lead Contamination Risk Assessment</a></div>
-        <!-- TODO: complete the author list from the published version -->
         <div class="pub-authors"><span class="me">Raphael Anaadumba</span>, Nazim A. Belabbaci, Yigit Bozkurt, Connor Sullivan, et al.</div>
         <div class="pub-venue">Scientific Reports, 2026<span class="pub-topic">Environmental health</span></div>
-        <div class="pub-tldr">Self-supervised pretraining lets a GAT learn lead risk from public housing and historical testing data: <b>90% accuracy, 0.836 AUC</b>, up to 12% above prior state of the art, with a five-fold reduction in screening cost.</div>
+        <div class="pub-tldr">Self-supervised pretraining for a GAT using housing and historical water-testing data: <b>90% accuracy and 0.836 AUC</b> in the reported study.</div>
         <div class="pub-links">
           <a href="https://doi.org/10.1038/s41598-026-52965-y" target="_blank" rel="noopener">Paper</a>
           <button data-bib="bib-sr">Cite</button>
@@ -223,7 +309,7 @@
         <div class="pub-title"><a href="https://ieeexplore.ieee.org/abstract/document/11464316" target="_blank" rel="noopener">Modeling Inter-Segment Relationships in Speech for Dementia Detection with Audio Spectrogram Transformers and Graph Attention Networks</a></div>
         <div class="pub-authors"><span class="me">Raphael Anaadumba</span>, Nazim A. Belabbaci, Anton Kovalev, Mohammad Arif Ul Alam</div>
         <div class="pub-venue">IEEE International Conference on Acoustics, Speech and Signal Processing, 2026<span class="pub-topic">Clinical audio</span></div>
-        <div class="pub-tldr">Links speech segments into a graph on top of Audio Spectrogram Transformer features: <b>80.5% accuracy on Pitt Corpus</b> and <b>81.8% on TAUKADIAL</b>; temporal edges carry the MCI signal.</div>
+        <div class="pub-tldr">Connects overlapping speech windows using temporal and acoustic-similarity edges: <b>80.5% accuracy on Pitt Corpus</b> and <b>81.8% on TAUKADIAL</b> under speaker-disjoint cross-validation. Temporal edges accounted for most of the MCI accuracy gain.</div>
         <div class="pub-links">
           <a href="https://ieeexplore.ieee.org/abstract/document/11464316" target="_blank" rel="noopener">Paper</a>
           <a href="https://doi.org/10.1109/ICASSP55912.2026.11464316" target="_blank" rel="noopener">DOI</a>
@@ -276,7 +362,7 @@
         <div class="pub-title"><a href="https://www.frontiersin.org/journals/environmental-engineering/articles/10.3389/fenve.2025.1488965/full" target="_blank" rel="noopener">Graph Neural Network-Based Water Contamination Detection from Community Housing Information</a></div>
         <div class="pub-authors"><span class="me">Raphael Anaadumba</span>, Yigit Bozkurt, Connor Sullivan, Madhavi Pagare, Pradeep Kurup, Benyuan Liu, Mohammad Arif Ul Alam</div>
         <div class="pub-venue">Frontiers in Environmental Engineering, vol. 4, 2025<span class="pub-topic">Environmental health</span></div>
-        <div class="pub-tldr">Links parcel, Zillow, and water-test records for <b>916 Flint homes</b> (from ~14,000 tests); the GAT reaches <b>0.93 AUC</b> and 0.93 recall versus 0.67 for XGBoost, with no household sampling.</div>
+        <div class="pub-tldr">Links parcel, Zillow, and historical water-test records for <b>916 Flint homes</b> (from ~14,000 tests); the GAT reaches <b>0.93 AUC</b> and 0.93 recall versus 0.67 recall for XGBoost, using housing characteristics to predict risk.</div>
         <div class="pub-links">
           <a href="https://www.frontiersin.org/journals/environmental-engineering/articles/10.3389/fenve.2025.1488965/full" target="_blank" rel="noopener">Paper</a>
           <a href="https://doi.org/10.3389/fenve.2025.1488965" target="_blank" rel="noopener">DOI</a>
@@ -300,46 +386,9 @@
 </main>
 
 <footer class="footer">
-  © 2026 Raphael Anaadumba · University of Massachusetts Lowell · Last updated September 2026
+  © 2026 Raphael Anaadumba · University of Massachusetts Lowell · Updated October 2026
 </footer>
 
-<script>
-  // Hash-based pages, so links like raphaelana.github.io/#publications work
-  const PAGES = ["about", "publications"];
-  function showPage() {
-    const id = PAGES.includes(location.hash.slice(1)) ? location.hash.slice(1) : "about";
-    document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === "page-" + id));
-    document.querySelectorAll(".nav-links a[data-page]").forEach(a => a.classList.toggle("active", a.dataset.page === id));
-    window.scrollTo(0, 0);
-  }
-  window.addEventListener("hashchange", showPage);
-  showPage();
-
-  // Older news
-  const news = document.getElementById("news");
-  const newsBtn = document.getElementById("news-toggle");
-  newsBtn.addEventListener("click", () => {
-    const open = news.classList.toggle("expanded");
-    newsBtn.textContent = open ? "Show less" : "Show older news";
-    newsBtn.setAttribute("aria-expanded", open);
-  });
-
-  // Cite toggles + copy
-  document.querySelectorAll("[data-bib]").forEach(btn => {
-    btn.setAttribute("aria-expanded", "false");
-    btn.addEventListener("click", () => {
-      const open = document.getElementById(btn.dataset.bib).classList.toggle("open");
-      btn.setAttribute("aria-expanded", open);
-    });
-  });
-  document.querySelectorAll(".bibtex .copy").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const text = btn.nextElementSibling.textContent;
-      try { await navigator.clipboard.writeText(text); btn.textContent = "Copied"; }
-      catch { btn.textContent = "Select & copy"; }
-      setTimeout(() => (btn.textContent = "Copy"), 1500);
-    });
-  });
-</script>
+<script src="site.js" defer></script>
 </body>
 </html>
