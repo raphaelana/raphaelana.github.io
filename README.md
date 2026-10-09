@@ -20,7 +20,7 @@ No build step is required.
 - `site.js`: hash navigation, older news, citation toggles and copying.
 - `research-graph-explorer.html`: explorer layout.
 - `explorer.js`: curated paper summaries, graph, search interface and answer handling.
-- `explorer-search.js`: local keyword retrieval over the summaries.
+- `explorer-search.js`: paper resolution, intent routing, scoped retrieval and citation validation.
 - `vendor/d3.min.js`: D3 7.8.5; see `vendor/D3-LICENSE.txt`.
 
 The main résumé is `Raphael_Anaadumba_Resume.pdf`. When replacing it, copy the
@@ -30,15 +30,33 @@ The website links to the canonical résumé filename.
 Research summaries should distinguish published findings from ongoing work.
 Keep numerical results, evaluation protocols, publication dates and links
 consistent with the original papers. New explorer papers belong in `PAPERS`;
-`EDGES` represents shared themes, not learned or causal relationships.
+`PAPER_DETAILS` supplies aliases and summary-section labels. Graph links are
+generated from shared methods and tasks, not learned or causal relationships.
 
 ## Explorer behavior
 
-Paper browsing and keyword search run locally, without an embedding download.
+Paper browsing and scoped keyword search run locally, without an embedding download.
+Selecting a paper sets the conversation context. Singular follow-ups stay with
+that paper; ambiguous references offer paper choices instead of guessing.
+Titles, venues and dataset descriptions are read directly from the paper records.
+Cross-paper comparisons retrieve balanced evidence, expanding through documented
+shared methods/tasks when related work is requested.
 The optional answer service is hosted separately on Vercel; `api/chat.js`
 contains that endpoint’s source. API credentials belong only in the Vercel
 server environment. If the answer service fails or exceeds 12 seconds, the
-explorer displays the retrieved summaries and links to the papers.
+explorer displays the retrieved summaries and links to the papers. The endpoint
+accepts scoped passages and recent conversation context, and returns structured
+paragraphs with supporting passage IDs. Both server and client reject missing or
+unknown citations. This validates source identity, not whether a citation entails
+every claim; the original paper remains the authority. Source disclosures show
+the exact indexed excerpt and the original-study link. The corpus contains
+curated summaries, not full-text paper retrieval.
+
+Run the retrieval and API regression tests with:
+
+```sh
+node --test tests/explorer.test.cjs
+```
 
 ## Before publishing
 

@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="vendor/d3.min.js" defer></script>
-<script src="explorer-search.js?v=20261009c" defer></script>
-<script src="explorer.js?v=20261009c" defer></script>
+<script src="explorer-search.js?v=20261009d" defer></script>
+<script src="explorer.js?v=20261009d" defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -121,6 +121,14 @@ a{color:var(--teal);text-decoration:none}a:hover{text-decoration:underline}
 #drawer-close{color:var(--white2);padding:5px}
 .bubble{white-space:pre-wrap;overflow-wrap:anywhere}
 .source-pill{color:var(--teal);text-decoration:none}
+.answer-block+.answer-block{margin-top:10px}
+.answer-sources{white-space:normal}
+.source-detail{display:inline}
+.source-detail[open]{display:block;margin:6px 0}
+.source-detail summary{cursor:pointer}
+.source-excerpt{margin:6px 0;color:var(--white2);white-space:pre-wrap}
+.paper-choices{display:grid;gap:6px;margin-top:8px;white-space:normal}
+#chat-context{margin-top:5px;line-height:1.5}
 #key-row span{color:var(--white2);line-height:1.5}
 #chat-input::placeholder{color:var(--white2)}
 #clear-btn{color:var(--white2)!important}
@@ -171,12 +179,13 @@ a{color:var(--teal);text-decoration:none}a:hover{text-decoration:underline}
 </div>
 
 <nav id="paper-list" aria-label="Browse research papers"></nav>
-<div id="graph-hint">Links show shared research themes · Drag nodes to rearrange</div>
+<div id="graph-hint">Links show shared methods or tasks · Drag nodes to rearrange</div>
 
 <div id="chat-panel">
   <div id="chat-panel-header">
     <h2>Search the research</h2><button id="clear-btn" style="background:none;border:0.5px solid var(--glass-border);border-radius:8px;padding:3px 9px;font-size:10px;color:var(--white3);cursor:pointer;font-family:Inter,sans-serif;float:right;margin-top:-2px;">Clear</button>
     <p>Curated paper summaries with links to the original studies</p>
+    <p id="chat-context" aria-live="polite">Choose a paper or ask across the research.</p>
   </div>
   <div id="chat-messages" role="log" aria-live="polite" aria-relevant="additions">
     <div class="msg assistant">
