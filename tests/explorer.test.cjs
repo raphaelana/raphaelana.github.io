@@ -104,3 +104,20 @@ test('API sends scoped evidence and history with a citation-constrained schema',
   apiContext.req=new Request('https://example.test/api/chat',{method:'POST',body:JSON.stringify({...payload,passages:[]})});
   assert.equal((await vm.runInContext('handler(req)',apiContext)).status,400);
 });
+
+test('unsupported answers remain structured and skip the unnecessary second model pass', async () => {
+  const requests=[];
+  const unsupported={status:'unsupported',blocks:[{role:'direct_answer',text:'The indexed evidence does not report hospital deployment.',citations:[]}]};
+  const apiContext=vm.createContext({Response,Request,process:{env:{GROQ_API_KEY:'test-key'}},fetch:async(url,options)=>{
+    requests.push(JSON.parse(options.body));
+    return Response.json({choices:[{message:{content:JSON.stringify(unsupported)}}]});
+  }});
+  const source=fs.readFileSync(path.join(root,'api/chat.js'),'utf8').replace('export const config','const config').replace('export default async function handler','async function handler');
+  vm.runInContext(source,apiContext);
+  const payload={question:'Was this deployed in a hospital?',passages:[{id:'icassp2026:6',paperId:'icassp2026',title:'ICASSP',venue:'ICASSP',section:'Limitations',locator:'p. 4',claimType:'limitation',text:'The study lacks prospective multi-site evaluation.'}]};
+  apiContext.req=new Request('https://example.test/api/chat',{method:'POST',body:JSON.stringify(payload)});
+  const response=await vm.runInContext('handler(req)',apiContext);
+  assert.equal(response.status,200);
+  assert.equal(requests.length,1);
+  assert.deepEqual(JSON.parse((await response.json()).choices[0].message.content),unsupported);
+});

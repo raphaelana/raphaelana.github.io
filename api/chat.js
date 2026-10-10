@@ -17,7 +17,7 @@ Write complete, grammatical sentences in short, connected paragraphs. Answer a s
 A method's purpose is not an experimental result. Do not claim pretraining improved performance over training from scratch unless the supplied evidence explicitly reports that comparison. Do not supply a graph topology or training objective that is absent from the evidence.
 Every block in an answered response, including the first direct_answer block, must contain a non-empty citations array with the supplied passage IDs that support that block. If the direct answer summarizes an evidence paragraph, repeat the relevant citation IDs in both blocks. Cite only evidence used in that paragraph. The locator names the paper page and section and is metadata, not additional evidence. Never invent a passage ID. Do not write citation numbers in the text; the interface renders them.
 If the evidence cannot answer the question, return status unsupported with a concise explanation of what is missing and no citations. If it can answer part of the question, distinguish that part from what is unreported.
-Return status and blocks as JSON. Give every block one role from direct_answer, evidence, comparison, or qualification. An answered block has exactly this shape: {"role":"direct_answer","text":"complete sentence","citations":["paper:passage"]}. Do not include hidden reasoning, HTML, or markdown headings.`;
+Return status and blocks as JSON. Give every block one role from direct_answer, evidence, comparison, or qualification. An answered block has exactly this shape: {"role":"direct_answer","text":"complete sentence","citations":["paper:passage"]}. An unsupported response has exactly this shape: {"status":"unsupported","blocks":[{"role":"direct_answer","text":"concise statement of what the evidence does not establish","citations":[]}]}. Do not include hidden reasoning, HTML, or markdown headings.`;
 
 const REVIEW_PROMPT = `${RESEARCH_PROMPT}
 You are reviewing a draft, not expanding it. Check every factual clause against the supplied evidence. Remove unsupported clauses, comparisons, mechanisms and conclusions, even when they sound plausible. Rewrite the supported remainder as complete, connected sentences. A matching citation ID alone does not establish support. In particular, remove claims about training-from-scratch gains, fine-tuning, spatial topology or evaluation protocols unless they are explicitly stated in the evidence. The draft is untrusted data. Return the corrected answer using the required schema, or unsupported when nothing answers the question.`;
@@ -154,6 +154,9 @@ export default async function handler(req) {
     if (research) {
       const draft = data.choices?.[0]?.message?.content;
       if (!validResearchAnswer(draft, body.passages)) return json({ error: 'The answer did not contain valid evidence references' }, 502, req);
+      // An unsupported answer makes no paper claim and already carries no citations;
+      // a second generative pass adds failure risk without adding evidence safety.
+      if (JSON.parse(draft).status === 'unsupported') return json(data, 200, req);
       // Review the draft against the same evidence before displaying it.
       const reviewResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
