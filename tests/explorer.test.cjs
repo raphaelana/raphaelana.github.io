@@ -96,6 +96,7 @@ test('API sends scoped evidence and history with a citation-constrained schema',
   assert.deepEqual(requestBody.response_format.json_schema.schema.properties.blocks.items.properties.citations.items.enum,['ssgat:0']);
   assert.match(requestBody.messages[1].content,/Previously discussed SSGAT/);
   assert.match(requestBody.messages[0].content,/complete, grammatical sentences/);
+  assert.match(requestBody.messages[0].content,/including the first direct_answer block/);
   assert.match(requestBodies[1].messages[0].content,/Check every factual clause/);
   answer={status:'answered',blocks:[{role:'direct_answer',text:'Wrong source.',citations:['icassp2026:2']}]};
   apiContext.req=new Request('https://example.test/api/chat',{method:'POST',body:JSON.stringify(payload)});
