@@ -108,35 +108,111 @@ const PAPERS = [
     "status": "Published"
   }
 ];
-// Relations are supported by the curated summaries, not inferred findings.
-const PAPER_DETAILS = {
-  aaai2026: { label: 'AAAI', aliases: ['AAAI', 'IAAI', 'Chicago', 'XGBoost'], methods: ['GAT', 'XGBoost'], task: 'Lead-risk prediction', datasetChunk: 1, sections: ['Method and comparisons', 'Dataset'] },
-  icassp2026: { label: 'ICASSP', aliases: ['ICASSP', 'dementia', 'speech', 'AST', 'Pitt', 'TAUKADIAL'], methods: ['AST', 'GAT'], task: 'Clinical audio classification', datasetChunk: 1, sections: ['Method', 'Dataset and evaluation', 'Edge ablations'] },
-  chase: { label: 'CHASE', aliases: ['CHASE', 'respiratory', 'lung sounds', 'ICBHI'], methods: ['STFT', 'CNN', 'GCN'], task: 'Clinical audio classification', datasetChunk: 1, sections: ['Method and comparisons', 'Dataset'] },
-  frontiers: { label: 'Frontiers', aliases: ['Frontiers', 'Flint', 'community housing'], methods: ['GAT'], task: 'Lead-risk prediction', datasetChunk: 0, sections: ['Dataset and graph construction', 'Method and comparisons'] },
-  ssgat: { label: 'Sci. Rep.', aliases: ['Scientific Reports', 'SSGAT', 'self-supervised', 'community-engaged'], methods: ['GAT', 'Self-supervised pretraining'], task: 'Lead-risk prediction', datasetChunk: 0, sections: ['Dataset and method', 'Training design'] }
-};
-const DATASET_DESCRIPTIONS = {
-  aaai2026: 'The AAAI/IAAI study links Chicago water-testing records with American Community Survey variables and Census records at the census-block-group level. Water-test concentrations supply the prediction labels, while housing and demographic records supply features.',
-  icassp2026: 'The ICASSP study uses the Pitt Corpus and TAUKADIAL, training and evaluating each separately with speaker-disjoint, stratified cross-validation. Repeated recordings from a speaker stay in the same evaluation partition.',
-  chase: 'The CHASE study uses ICBHI respiratory sound recordings, which include expert annotations for crackles and wheezes and cover multiple clinical conditions and acquisition settings. Its prediction task is respiratory disease classification.',
-  frontiers: 'The Frontiers study links historical water-testing records from Flint with housing and parcel data. Historical lead measurements supply the prediction labels.',
-  ssgat: 'The Scientific Reports study uses housing records and historical water-testing records for self-supervised graph attention and subsequent lead-risk prediction.'
-};
-PAPERS.forEach(paper => Object.assign(paper, PAPER_DETAILS[paper.id], { datasetDescription: DATASET_DESCRIPTIONS[paper.id] }));
-const EDGES = [];
-PAPERS.forEach((source, i) => PAPERS.slice(i + 1).forEach(target => {
-  const methods = source.methods.filter(method => target.methods.includes(method));
-  const sharedTask = source.task === target.task;
-  if (methods.length || sharedTask) EDGES.push({
-    source: source.id, target: target.id, weight: sharedTask ? 3 : 1,
-    relations: [...methods.map(method => `Shared method: ${method}`), ...(sharedTask ? [`Shared task: ${source.task}`] : [])],
-    evidence: [`${source.id}:0`, `${target.id}:0`]
-  });
-}));
 
-const CHUNKS=[];
-PAPERS.forEach(p=>p.chunks.forEach((text,i)=>CHUNKS.push({id:`${p.id}:${i}`,paperId:p.id,chunkIdx:i,kind:p.sections[i],text,paper:p})));
+// Verified against the final paper PDFs. Each record is deliberately narrow:
+// one claim, its role in the study, and an inspectable location in the paper.
+const PAPER_RESEARCH = {
+  aaai2026: {
+    label: 'AAAI', aliases: ['AAAI', 'IAAI', 'Chicago', 'XGBoost', 'GAT-XGBoost'],
+    methods: ['GAT', 'XGBoost'], task: 'Lead-risk prediction', datasetEvidence: 1,
+    summary: 'Tests whether spatial graph embeddings add useful information to demographic and housing features for Chicago block-group lead-risk prediction.',
+    evidence: [
+      { kind: 'Research question', claimType: 'scope', locator: 'pp. 1–2 · Introduction', tags: ['question','hybrid','spatial','demographic'], text: 'The study asks whether a hybrid model can combine spatial dependence with demographic and housing heterogeneity to identify unsafe Chicago census block groups more effectively than spatial-only, tabular, and current-practice baselines.' },
+      { kind: 'Dataset and unit', claimType: 'data', locator: 'p. 3 · Data Sources and Preprocessing', tags: ['Chicago','ACS','Census','block group','second draw'], text: 'The analysis begins with 38,385 Chicago water tests from 2016–2023, representing at least 14,673 partially anonymized addresses. Lead labels use the second-draw measurement. The records are aggregated to 800 census block groups and joined to 2021 American Community Survey and 2020 Census variables.' },
+      { kind: 'Graph construction', claimType: 'method', locator: 'p. 4 · Spatial Graph Construction', tags: ['node','edge','Haversine','kNN','topology'], text: 'Each node is a census block group. An undirected edge joins centroids within one kilometre by Haversine distance; a k-nearest-neighbour fallback enforces a minimum degree of eight, self-loops are added, and non-self edges are weighted by inverse distance.' },
+      { kind: 'Model decomposition', claimType: 'method', locator: 'p. 4 · Hybrid Architecture', tags: ['embedding','fusion','GAT','XGBoost'], text: 'A two-layer GAT produces a 32-dimensional spatial embedding. After the GAT converges, that embedding is concatenated with 64 selected tabular features and two graph-structural features, and XGBoost performs the final classification.' },
+      { kind: 'Ablation finding', claimType: 'finding', locator: 'p. 6 · Table 3, Ablation Study', tags: ['ablation','demographic','spatial embedding','comparison'], text: 'The component ablation separates the two information sources: removing spatial embeddings reduces balanced accuracy by 5.1 percentage points, while removing demographic features reduces it by 16.6 points. In this experiment, demographic variables carry more of the predictive signal, with spatial embeddings adding a smaller contribution.' },
+      { kind: 'Evaluation design', claimType: 'evaluation', locator: 'p. 5 · Classification and Threshold Optimization', tags: ['split','cross-validation','leakage','train validation test'], text: 'Stratified folds allocate 60% of block groups to training, 20% to validation, and 20% to testing. Imputation, feature selection, and scaling are fitted only on training data. The paper evaluates random stratified block-group splits rather than a held-out-city or spatial-block transfer test.' },
+      { kind: 'Comparative result', claimType: 'finding', locator: 'pp. 5–6 · Tables 1–3', tags: ['baseline','false positive','balanced accuracy','recall'], text: 'The hybrid is compared with a current-practice heuristic, SVM, GAT-only, and tabular XGBoost. It has the strongest reported balanced accuracy and unsafe-class recall at the studied thresholds, while the ablation shows that neither its graph representation nor its tabular features alone accounts for the full result.' },
+      { kind: 'Limitations', claimType: 'limitation', locator: 'p. 6 · Conclusion and Future Work', tags: ['privacy','aggregation','static data','external validation'], text: 'The paper identifies four limits: privacy-driven block-group aggregation can hide within-neighbourhood variation; static 2016–2023 data omit continuing pipe replacement; changed boundaries require GAT retraining; and second-draw samples may underestimate some household exposures. External validation in cities with different infrastructure and water chemistry remains future work.' }
+    ]
+  },
+  icassp2026: {
+    label: 'ICASSP', aliases: ['ICASSP', 'dementia', 'speech', 'AST', 'Pitt', 'TAUKADIAL'],
+    methods: ['AST', 'GAT'], task: 'Clinical audio classification', datasetEvidence: 1,
+    summary: 'Tests what explicit relationships between speech segments add beyond pooled transformer features for cognitive-impairment classification and MMSE regression.',
+    evidence: [
+      { kind: 'Representation and graph', claimType: 'method', locator: 'pp. 1–2 · Proposed Methodology', tags: ['AST','prosody','window','node','edge','temporal','similarity'], text: 'Recordings are divided into overlapping 10-second windows with a 5-second stride. Each node combines a 768-dimensional Audio Spectrogram Transformer embedding with prosodic features. The graph contains consecutive-window edges and cosine-similarity k-nearest-neighbour edges with k equal to three; a GAT produces a recording-level representation.' },
+      { kind: 'Datasets and evaluation', claimType: 'evaluation', locator: 'pp. 2–3 · Experimental Setup, §3.2', tags: ['Pitt','TAUKADIAL','speaker-disjoint','cross-validation'], text: 'Pitt and the English TAUKADIAL subset are trained and evaluated separately. Both use speaker-disjoint, stratified 10-fold cross-validation, so recordings from the same speaker do not cross evaluation partitions.' },
+      { kind: 'Edge ablation', claimType: 'finding', locator: 'pp. 3–4 · Table 3, §4.2', tags: ['ablation','AST-only','temporal-only','similarity','MCI'], text: 'The ablation compares pooled AST features, a temporal-only graph, and the full temporal-plus-similarity graph. On TAUKADIAL, temporal edges account for nearly all of the classification gain; adding similarity edges changes accuracy only slightly and lowers unweighted average recall, although AUROC rises. On Pitt, both temporal and similarity edges contribute to accuracy.' },
+      { kind: 'Regression comparison', claimType: 'finding', locator: 'p. 4 · Table 4', tags: ['MMSE','regression','RMSE','baseline'], text: 'For MMSE regression, the paper compares AST-only pooling with AST plus GAT on both datasets and reports lower error for the graph model. The reduction is larger on TAUKADIAL than on Pitt, matching the stronger classification change in the MCI cohort.' },
+      { kind: 'Model cost', claimType: 'comparison', locator: 'p. 3 · §3.2 Implementation Details', tags: ['parameters','overhead','cost'], text: 'The GAT component adds 0.47 million parameters to an 86.19-million-parameter AST backbone, approximately 0.5% additional parameters. This quantifies the architectural cost of the relational component alongside its ablation.' },
+      { kind: 'Interpretation boundary', claimType: 'qualification', locator: 'p. 4 · §§4.2–4.3', tags: ['attention','interpretation','discourse','association'], text: 'The authors interpret the attention and ablation patterns as evidence that inter-segment organization is informative, especially for mild cognitive impairment. These experiments establish predictive contribution within the two corpora; they do not establish that the learned edges are clinical biomarkers or causal mechanisms.' },
+      { kind: 'Limitations', claimType: 'limitation', locator: 'p. 4 · §5 Conclusions and Future Works', tags: ['English','external validation','calibration','fairness','fixed graph'], text: 'The study is limited to two English-language corpora and fixed 10-second windows, a 5-second stride, and k equal to three. It lacks prospective multi-site evaluation, calibration analysis, subgroup fairness audits, and robustness testing under device or noise shift.' }
+    ]
+  },
+  chase: {
+    label: 'CHASE', aliases: ['CHASE', 'respiratory', 'lung sounds', 'ICBHI', 'CNN-GCN'],
+    methods: ['STFT', 'CNN', 'GCN'], task: 'Clinical audio classification', datasetEvidence: 1,
+    summary: 'Builds a CNN–GCN pipeline over respiratory recordings and compares feature attention across disease-classification settings.',
+    evidence: [
+      { kind: 'Model pipeline', claimType: 'method', locator: 'pp. 2–3 · §§3.1–4.1', tags: ['STFT','CNN','PCA','GCN','attention'], text: 'Recordings are segmented into 15-second clips and converted to normalized STFT spectrograms. A CNN extracts features, PCA reduces the penultimate representation, and a GCN aggregates related sound segments. A convolutional attention map reweights spectrogram features before classification.' },
+      { kind: 'Dataset and prediction target', claimType: 'data', locator: 'p. 2 · §3 Materials and Methods', tags: ['ICBHI','126 patients','1021 recordings','disease class'], text: 'The study uses the ICBHI 2017 respiratory sound database with 1,021 recordings from 126 patients, collected with different sensors and at different chest locations. The prediction targets are respiratory disease classes in two-way, three-way, and six-way settings.' },
+      { kind: 'Graph construction', claimType: 'method', locator: 'pp. 2–3 · §4 Hybrid Model Structure', tags: ['node','edge','cosine similarity','CNN features'], text: 'Graph nodes represent sound segments after CNN feature extraction and PCA. Edges encode cosine-similarity relationships between those learned segment features, and graph convolution propagates information across the resulting graph.' },
+      { kind: 'Attention comparison', claimType: 'finding', locator: 'pp. 3–4 · Tables 1–2, §§6.1–6.2', tags: ['attention','comparison','six-way','negative finding'], text: 'Adding attention raises the reported six-way accuracy from 90% to 93%, but the class-wise results do not show a uniform advantage in the two-way and three-way tasks. The paper therefore supports a task-dependent benefit, not a claim that attention improves every classification setting.' },
+      { kind: 'Evaluation reporting boundary', claimType: 'limitation', locator: 'p. 3 · §5 Experimental Evaluation', tags: ['split','patient-disjoint','cross-validation','unreported'], text: 'The paper reports early stopping, augmentation, metrics, and training hyperparameters, but it does not specify a patient-disjoint split or the construction of its cross-validation partitions. Patient-disjoint evaluation should therefore not be attributed to this study.' },
+      { kind: 'Annotation boundary', claimType: 'qualification', locator: 'p. 2 · §3.1 Data Preprocessing', tags: ['crackles','wheezes','annotation','not detection'], text: 'The ICBHI recordings include expert annotations for crackles and wheezes, but this paper predicts disease categories. It does not report a crackle- or wheeze-detection experiment, so those annotations should not be described as the model’s prediction target.' },
+      { kind: 'Scope and next steps', claimType: 'limitation', locator: 'p. 5 · §8 Conclusion', tags: ['single dataset','larger dataset','clinical histories','generalizability'], text: 'The empirical study is confined to ICBHI. The paper lists larger datasets, stronger temporal modeling, and integration of clinical histories and physiological signals as future work rather than completed validation.' }
+    ]
+  },
+  frontiers: {
+    label: 'Frontiers', aliases: ['Frontiers', 'Flint', 'community housing', 'water contamination'],
+    methods: ['GAT'], task: 'Lead-risk prediction', datasetEvidence: 1,
+    summary: 'Models Flint homes as a spatial graph and tests how distance-based connectivity changes lead-risk prediction.',
+    evidence: [
+      { kind: 'Research design', claimType: 'scope', locator: 'pp. 1–3 · Abstract and Introduction', tags: ['Flint','property','GAT','spatial'], text: 'The study asks whether a Graph Attention Network can use relationships between Flint homes, together with municipal and housing attributes, to classify household lead-contamination risk more effectively than non-graph baselines.' },
+      { kind: 'Dataset and unit', claimType: 'data', locator: 'pp. 3–6 · §§2.1–2.3', tags: ['Flint','916 homes','Zillow','ArcGIS','water tests'], text: 'Historical 2016 Flint water tests are linked to Zillow-derived property attributes and ArcGIS parcel records. Of roughly 14,000 original records, 916 homes satisfy the matching and completeness criteria and become the unit of analysis.' },
+      { kind: 'Graph construction', claimType: 'method', locator: 'pp. 7–11 · §§2.6, 3.7', tags: ['node','edge','geodesic distance','threshold','topology'], text: 'Each home is a node, and geodesic distance determines neighbourhood connectivity. The paper evaluates connection radii from 0.1 to 0.3 miles; the 0.1-mile graph gives the highest reported recall, while larger radii trade some recall for precision.' },
+      { kind: 'Evaluation reporting boundary', claimType: 'limitation', locator: 'p. 7 · §2.7.1 Cross-validation and Stability', tags: ['cross-validation','split','ten runs','unreported'], text: 'The paper reports ten independent runs with cross-validation and summarizes mean accuracy and standard deviation. It does not identify the fold count or state whether connected or nearby properties are separated across folds, so a spatially disjoint evaluation must not be inferred.' },
+      { kind: 'Model comparison', claimType: 'finding', locator: 'pp. 8–10 · §§3.1–3.4, Table 4', tags: ['GAT','XGBoost','baseline','comparison'], text: 'The GAT is compared with an XGBoost-based ensemble on the Flint sample. The graph model has stronger reported classification results, but the comparison also changes the input sources: the GAT uses parcel and Zillow data, whereas the tabular ensemble is described with parcel data. This limits a clean architecture-only interpretation.' },
+      { kind: 'Topology sensitivity', claimType: 'finding', locator: 'pp. 9–11 · Figure 6, §3.7', tags: ['distance','sensitivity','recall','precision','negative finding'], text: 'Performance changes as the connection radius grows. The most local graph has the highest reported recall; increasing the radius slightly lowers recall while improving precision. The result shows that graph construction is an experimental variable rather than a neutral preprocessing step.' },
+      { kind: 'Interpretability boundary', claimType: 'qualification', locator: 'p. 12 · §3.9 Relative Variable Influence', tags: ['GraphLIME','feature importance','causality'], text: 'GraphLIME identifies building age, address, zoning, and parcel information as influential predictors. The paper explicitly states that these associations do not establish causes of lead contamination.' },
+      { kind: 'Scope limitations', claimType: 'limitation', locator: 'pp. 6, 13 · Dataset scope and Conclusion', tags: ['selection','single city','generalization','recalibration'], text: 'The retained 916-home sample is not representative of all Flint homes and intentionally prioritizes contaminated properties. Applying the model elsewhere would require local data, recalibration or retraining, and accommodation of different infrastructure, regulations, and monitoring practices.' }
+    ]
+  },
+  ssgat: {
+    label: 'Sci. Rep.', aliases: ['Scientific Reports', 'SSGAT', 'self-supervised', 'community-engaged', 'Andover'],
+    methods: ['GAT', 'Self-supervised pretraining'], task: 'Lead-risk prediction', datasetEvidence: 1,
+    summary: 'Tests reconstruction-regularized graph learning under ward holdout in Flint and transfer to a small, sparsely connected Andover graph.',
+    evidence: [
+      { kind: 'Method and question', claimType: 'scope', locator: 'pp. 2–3 · Abstract and Contributions', tags: ['self-supervised','transfer','label scarcity','reconstruction'], text: 'The study asks whether reconstruction-regularized graph representations can preserve contaminated-property detection under class imbalance and geographic transfer, while reducing dependence on target-city labels.' },
+      { kind: 'Datasets and transfer unit', claimType: 'data', locator: 'p. 5 · Data Settings', tags: ['Flint','Andover','ward','property','402 measurements'], text: 'Flint provides more than 16,000 historical property records across nine wards and serves as the source city. Andover provides 402 measurements from 136 addresses collected from 2001–2022; after processing, its graph contains 100 property nodes. The cities contain non-overlapping properties.' },
+      { kind: 'Graph construction', claimType: 'method', locator: 'p. 6 · Graph Construction', tags: ['parcel identifier','clique','isolated node','topology'], text: 'A node is a residential property. An undirected edge exists only when two properties share a parcel identifier, producing clique components without a tuned distance threshold. Flint has 9,724 nodes in 108 components; Andover has 100 nodes in 99 components, so most target nodes are isolated.' },
+      { kind: 'Training objective', claimType: 'method', locator: 'pp. 6–7 · Self-Supervised Feature Reconstruction', tags: ['MSE','NLL','reconstruction','fine-tuning'], text: 'A two-layer GAT encodes 32-dimensional node representations. Training combines class-weighted classification loss with mean-squared feature reconstruction; the reconstruction weight is 0.1 during Flint pretraining and 0.05 during Andover fine-tuning.' },
+      { kind: 'Evaluation design', claimType: 'evaluation', locator: 'pp. 7–10 · LOWO and LOHO protocols', tags: ['LOWO','LOHO','five seeds','held out','leakage'], text: 'Source-city evaluation leaves one of nine Flint wards out, with five-fold internal validation and five random seeds. All source checkpoints transfer to Andover without selecting the best Flint ward. Target evaluation holds out each unsafe Andover property in turn, and held-out nodes are not used for model selection or early stopping.' },
+      { kind: 'Qualified comparison', claimType: 'finding', locator: 'pp. 9–10 · Evaluation Framework and Results', tags: ['supervised GAT','random forest','no significant difference','macro-recall'], text: 'SSGAT is compared with the same GAT architecture without reconstruction and with Random Forest. No statistically significant macro-recall difference is detected between SSGAT and supervised GAT across Flint wards, and their Andover transfer results are also similar. The paper treats this as comparable transfer behaviour, not proof that self-supervision is superior.' },
+      { kind: 'Failure mode under imbalance', claimType: 'finding', locator: 'p. 10 · Within-City and Cross-City Results', tags: ['accuracy','recall','safe class','random forest','imbalance'], text: 'Random Forest retains high aggregate accuracy while macro-recall stays near one half in both Flint and Andover. The analysis attributes this to majority-safe predictions, illustrating why aggregate accuracy can conceal failure to identify contaminated properties.' },
+      { kind: 'Transfer boundary', claimType: 'limitation', locator: 'p. 11 · Discussion', tags: ['isolated nodes','Andover','boundary condition','message passing'], text: 'Because 99 of 100 Andover graph components are singletons, the target-city result cannot be evidence of strong target-domain neighbour aggregation. It shows that representations learned in the richer Flint graph remain usable in a sparse target, not that Andover graph interactions drive the result.' },
+      { kind: 'Limitations', claimType: 'limitation', locator: 'p. 11 · Discussion and Conclusion', tags: ['single municipality','unsafe samples','scalability','multi-city'], text: 'Transfer is evaluated in one small municipality with few unsafe samples. The paper calls for broader multi-city validation and notes the computational overhead of graph attention as a scalability constraint.' },
+      { kind: 'Community role', claimType: 'qualification', locator: 'pp. 5, 11 · Data Settings and Conclusion', tags: ['stakeholder','feature selection','held-out labels','community'], text: 'Community members and local officials informed feature selection and interpretation. Their role was advisory: they did not access held-out labels or alter model parameters or evaluation outcomes.' }
+    ]
+  }
+};
+
+PAPERS.forEach(paper => {
+  const research = PAPER_RESEARCH[paper.id];
+  Object.assign(paper, research, {
+    evidence: research.evidence,
+    chunks: research.evidence.map(item => item.text),
+    datasetDescription: research.evidence[research.datasetEvidence].text
+  });
+});
+
+// Every visual link has a named relationship and evidence on both ends.
+const EDGES = [
+  { source: 'icassp2026', target: 'chase', weight: 2, type: 'representation-pattern', relations: ['Both convert physiological audio into segment-level representations before graph aggregation; ICASSP tests temporal and similarity edges, while CHASE uses cosine-similarity edges.'], evidence: ['icassp2026:0','icassp2026:2','chase:0','chase:2'] },
+  { source: 'frontiers', target: 'ssgat', weight: 3, type: 'method-progression', relations: ['The Flint property-level GAT is extended into parcel-defined topology, reconstruction regularization, ward holdout, and cross-city transfer.'], evidence: ['frontiers:1','frontiers:2','ssgat:2','ssgat:4'] },
+  { source: 'frontiers', target: 'aaai2026', weight: 2, type: 'scale-shift', relations: ['Both study lead risk with spatial graphs, but the unit shifts from individual Flint homes to Chicago census block groups and the later model separates spatial embeddings from tabular classification.'], evidence: ['frontiers:1','frontiers:2','aaai2026:1','aaai2026:3'] },
+  { source: 'ssgat', target: 'aaai2026', weight: 2, type: 'evaluation-contrast', relations: ['Both use GAT representations for lead risk; SSGAT emphasizes geographic holdout and transfer, whereas the Chicago study emphasizes hybrid spatial-tabular ablation under stratified block-group splits.'], evidence: ['ssgat:4','ssgat:5','aaai2026:4','aaai2026:5'] },
+  { source: 'icassp2026', target: 'ssgat', weight: 1, type: 'ablation-logic', relations: ['Both isolate what the graph component contributes: ICASSP ablates edge types, while SSGAT compares reconstruction-regularized and supervised versions of the same GAT.'], evidence: ['icassp2026:2','ssgat:5'] }
+];
+
+const CHUNKS = [];
+PAPERS.forEach(paper => paper.evidence.forEach((item, index) => CHUNKS.push({
+  id: `${paper.id}:${index}`, paperId: paper.id, chunkIdx: index,
+  kind: item.kind, claimType: item.claimType, locator: item.locator,
+  tags: item.tags, text: item.text, paper
+})));
 
 const chatState = { activePaperId: null, lastPaperIds: [], messages: [] };
 function updatePaperContext(ids) {
@@ -268,7 +344,7 @@ function showPaper(p) {
   document.getElementById('drawer-venue').textContent = `${p.venue} · ${p.status}`;
   document.getElementById('drawer-venue').style.color = p.color;
   document.getElementById('drawer-title').textContent = p.title;
-  document.getElementById('drawer-abstract').textContent = p.chunks[0];
+  document.getElementById('drawer-abstract').textContent = `${p.summary} ${p.evidence.length} section-level evidence records are indexed for question answering.`;
   const tags = document.getElementById('drawer-keywords');
   tags.replaceChildren();
   p.keywords.slice(0, 5).forEach(word => {
@@ -301,7 +377,7 @@ function addMsg(role, content, hits = []) {
   const blocks = Array.isArray(content) ? content : [{ text: content, sources: hits }];
   const citationNumbers = new Map();
   blocks.forEach(block => {
-    const paragraph = document.createElement('div'); paragraph.className = 'answer-block';
+    const paragraph = document.createElement('div'); paragraph.className = `answer-block ${block.role || ''}`.trim();
     if (role === 'assistant') appendAnswerText(paragraph, block.text);
     else paragraph.textContent = block.text;
     if (block.sources?.length) {
@@ -310,7 +386,7 @@ function addMsg(role, content, hits = []) {
         if (!citationNumbers.has(hit.id)) citationNumbers.set(hit.id, citationNumbers.size + 1);
         const details = document.createElement('details'); details.className = 'source-detail';
         const summary = document.createElement('summary'); summary.className = 'source-pill';
-        summary.textContent = `[${citationNumbers.get(hit.id)}] ${hit.paper.venue} · ${hit.kind}`;
+        summary.textContent = `[${citationNumbers.get(hit.id)}] ${hit.paper.venue} · ${hit.kind}${hit.locator ? ` · ${hit.locator}` : ''}`;
         summary.title = hit.paper.title;
         const excerpt = document.createElement('div'); excerpt.className = 'source-excerpt';
         excerpt.textContent = hit.text;
@@ -387,7 +463,10 @@ async function sendMessage() {
       body: JSON.stringify({
         question: query, intent: plan.intent,
         history,
-        passages: hits.map(hit => ({ id: hit.id, paperId: hit.paperId, title: hit.paper.title, venue: hit.paper.venue, section: hit.kind, text: hit.text })),
+        passages: hits.map(hit => ({
+          id: hit.id, paperId: hit.paperId, title: hit.paper.title, venue: hit.paper.venue,
+          section: hit.kind, locator: hit.locator, claimType: hit.claimType, text: hit.text
+        })),
         relationships: EDGES.filter(edge => plan.paperIds.includes(edgePaperId(edge.source)) && plan.paperIds.includes(edgePaperId(edge.target)))
           .map(edge => ({ source: edgePaperId(edge.source), target: edgePaperId(edge.target), relations: edge.relations }))
       })
